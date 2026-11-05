@@ -62,6 +62,10 @@
     if (open) closeDrawer(open);
     const search = $('[data-search-modal].is-open');
     if (search) closeSearch();
+    $$('details.facet[open]').forEach((d) => {
+      d.removeAttribute('open');
+      d.querySelector('summary').focus();
+    });
   });
 
   /* ------------------------------------------------------------------------

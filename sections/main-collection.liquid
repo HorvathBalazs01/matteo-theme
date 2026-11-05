@@ -10,7 +10,7 @@
         {{ collection.image | image_url: width: 2000 | image_tag: loading: 'eager', widths: '750,1200,1600,2000', sizes: '100vw', alt: collection.title }}
       </div>
     {%- endif -%}
-    <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumb' | t }}">
       <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
       <span aria-hidden="true">/</span>
       <span aria-current="page">{{ collection.title }}</span>
@@ -42,6 +42,7 @@
                   {% render 'icon', icon: 'chevron' %}
                 </summary>
                 <div class="facet__panel">
+                  <p class="facet__panel-title" aria-hidden="true">{{ filter.label }}</p>
                   {%- for value in filter.values -%}
                     {%- assign input_id = 'filter-' | append: filter.param_name | append: '-' | append: forloop.index | handleize -%}
                     <label for="{{ input_id }}" class="facet__option{% if value.count == 0 and value.active == false %} facet__option--disabled{% endif %}">

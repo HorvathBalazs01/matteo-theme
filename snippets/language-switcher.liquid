@@ -1,0 +1,27 @@
+{%- comment -%}
+  Nyelvváltó (HU / EN). Csak akkor jelenik meg, ha a boltban egynél több nyelv van közzétéve
+  (Beállítások → Nyelvek). A Shopify localization űrlapja a váltás után ugyanarra az oldalra tér vissza.
+  Paraméter: class (opcionális) – plusz osztály a burkoló elemre.
+{%- endcomment -%}
+{%- if localization.available_languages.size > 1 -%}
+  {%- assign switcher_class = 'lang-switch ' | append: class -%}
+  {%- form 'localization', class: switcher_class -%}
+    <span class="visually-hidden">{{ 'general.language' | t }}:</span>
+    {%- for language in localization.available_languages -%}
+      {%- if language.iso_code == localization.language.iso_code -%}
+        <span class="lang-switch__item is-active" lang="{{ language.iso_code }}" aria-current="true">
+          <span aria-hidden="true">{{ language.iso_code | upcase }}</span>
+          <span class="visually-hidden">{{ language.endonym_name | capitalize }}</span>
+        </span>
+      {%- else -%}
+        <button type="submit" name="language_code" value="{{ language.iso_code }}" class="lang-switch__item" lang="{{ language.iso_code }}">
+          <span aria-hidden="true">{{ language.iso_code | upcase }}</span>
+          <span class="visually-hidden">{{ language.endonym_name | capitalize }}</span>
+        </button>
+      {%- endif -%}
+      {%- unless forloop.last -%}
+        <span class="lang-switch__sep" aria-hidden="true">/</span>
+      {%- endunless -%}
+    {%- endfor -%}
+  {%- endform -%}
+{%- endif -%}

@@ -31,6 +31,7 @@
           {%- endfor -%}
         </nav>
       {%- endif -%}
+      {% render 'language-switcher', class: 'header__lang' %}
       <div class="header__icons">
         <a href="{{ routes.search_url }}" class="icon-btn" data-search-open aria-label="{{ 'general.search' | t }}">
           {% render 'icon', icon: 'search' %}
@@ -78,6 +79,7 @@
           <a href="{{ routes.account_url }}" class="menu-drawer__link">{{ 'general.account' | t }}</a>
         {%- endif -%}
       </nav>
+      {% render 'language-switcher', class: 'menu-drawer__lang' %}
       {% render 'social-links', class: 'menu-drawer__social' %}
     </div>
   </div>

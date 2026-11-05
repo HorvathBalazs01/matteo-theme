@@ -15,7 +15,8 @@
               {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
             {%- endif -%}
           </div>
-          <span class="tile__title">{{ title | default: 'Kategória' }}</span>
+          {%- if title == blank -%}{%- assign title = 'collections.category' | t -%}{%- endif -%}
+          <span class="tile__title">{{ title }}</span>
           {%- if block.settings.cta != blank -%}
             <span class="tile__cta">{{ block.settings.cta }} {% render 'icon', icon: 'arrow' %}</span>
           {%- endif -%}

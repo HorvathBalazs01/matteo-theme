@@ -13,7 +13,9 @@
     "error": "Hiba történt, kérjük próbáld újra.",
     "previous_slide": "Előző dia",
     "next_slide": "Következő dia",
-    "go_to_slide": "Ugrás a(z) {{ number }}. diára"
+    "go_to_slide": "Ugrás a(z) {{ number }}. diára",
+    "language": "Nyelv",
+    "breadcrumb": "Morzsamenü"
   },
   "products": {
     "from": "{{ price }}-tól",
@@ -28,7 +30,8 @@
     "decrease": "Mennyiség csökkentése",
     "increase": "Mennyiség növelése",
     "placeholder_title": "Termék neve",
-    "recommendations": "Ezeket is ajánljuk"
+    "recommendations": "Ezeket is ajánljuk",
+    "as_set": "Szettként"
   },
   "cart": {
     "title": "Kosár",
@@ -55,7 +58,8 @@
     "clear": "Szűrők törlése",
     "apply": "Alkalmaz",
     "empty": "Nincs a feltételeknek megfelelő termék.",
-    "all": "Összes"
+    "all": "Összes",
+    "category": "Kategória"
   },
   "search": {
     "title": "Keresés",

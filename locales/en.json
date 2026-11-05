@@ -1,0 +1,102 @@
+{
+  "general": {
+    "skip": "Skip to content",
+    "close": "Close",
+    "menu": "Menu",
+    "search": "Search",
+    "account": "My account",
+    "cart": "Cart",
+    "home": "Home",
+    "view_all": "All products",
+    "shop_now": "Shop now",
+    "continue_shopping": "Continue shopping",
+    "error": "Something went wrong, please try again.",
+    "previous_slide": "Previous slide",
+    "next_slide": "Next slide",
+    "go_to_slide": "Go to slide {{ number }}",
+    "language": "Language",
+    "breadcrumb": "Breadcrumb"
+  },
+  "products": {
+    "from": "From {{ price }}",
+    "regular_price": "Regular price",
+    "sale_price": "Sale price",
+    "sale": "Sale",
+    "new": "New",
+    "sold_out": "Sold out",
+    "unavailable": "Unavailable",
+    "add_to_cart": "Add to cart",
+    "quantity": "Quantity",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "placeholder_title": "Product name",
+    "recommendations": "You may also like",
+    "as_set": "Complete the set"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty.",
+    "subtotal": "Subtotal",
+    "checkout": "Check out",
+    "remove": "Remove",
+    "update": "Update cart",
+    "note": "Order note",
+    "taxes": "Prices include VAT. Shipping is calculated at checkout.",
+    "free_shipping_reached": "You get free shipping!",
+    "free_shipping_remaining": "Spend {{ amount }} more for free shipping.",
+    "view_cart": "View cart",
+    "product": "Product",
+    "total": "Total"
+  },
+  "collections": {
+    "products_count": {
+      "one": "{{ count }} product",
+      "other": "{{ count }} products"
+    },
+    "sort": "Sort by",
+    "filter": "Filter",
+    "clear": "Clear filters",
+    "apply": "Apply",
+    "empty": "No products match these filters.",
+    "all": "All",
+    "category": "Category"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "What are you looking for?",
+    "submit": "Search",
+    "results": {
+      "one": "{{ count }} result for “{{ terms }}”",
+      "other": "{{ count }} results for “{{ terms }}”"
+    },
+    "no_results": "No results for “{{ terms }}”."
+  },
+  "newsletter": {
+    "email": "Email address",
+    "placeholder": "Your email address",
+    "subscribe": "Subscribe",
+    "success": "Thanks for subscribing!"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous page",
+    "next": "Next page",
+    "page": "Page {{ number }}"
+  },
+  "not_found": {
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist or has moved."
+  },
+  "password": {
+    "title": "Opening soon",
+    "enter": "Enter using password",
+    "label": "Password",
+    "submit": "Enter",
+    "admin": "Are you the store owner?",
+    "admin_link": "Log in here"
+  },
+  "footer": {
+    "copyright": "All rights reserved.",
+    "payment": "Payment methods"
+  }
+}

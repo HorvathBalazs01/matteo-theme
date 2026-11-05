@@ -14,7 +14,7 @@
     <title>
       {{ page_title }}
       {%- if current_tags %} – {{ current_tags | join: ', ' }}{% endif -%}
-      {%- if current_page != 1 %} – {{ current_page }}. oldal{% endif -%}
+      {%- if current_page != 1 %} – {{ 'pagination.page' | t: number: current_page }}{% endif -%}
       {%- unless page_title contains shop.name %} – {{ shop.name }}{% endunless -%}
     </title>
 

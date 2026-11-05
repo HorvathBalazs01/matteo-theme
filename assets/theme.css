@@ -304,9 +304,41 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 }
 .cart-count[data-count="0"] { display: none; }
 
+/* Nyelvváltó (HU / EN) */
+.lang-switch {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+.lang-switch__item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 44px;
+  padding: 0 0 0 .2em; /* a betűköz miatt optikailag középre */
+  border: 0;
+  background: none;
+  color: var(--color-muted);
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  transition: color .2s ease;
+}
+.lang-switch__item:hover { color: var(--color-text); }
+.lang-switch__item.is-active { color: var(--color-text); cursor: default; }
+.lang-switch__sep { color: var(--color-line-strong); }
+.menu-drawer__lang { margin-top: 28px; margin-left: -4px; font-size: 13px; }
+.menu-drawer__lang .lang-switch__item { min-width: 44px; }
+
 @media (max-width: 989px) {
   .header { height: 60px; padding: 0 6px; }
   .header__nav { display: none; }
+  .header__lang { display: none; }
   .header__side { gap: 0; }
   .header__side--left .icon-btn { margin-left: 0; }
   .header__icons { margin-right: 0; }
@@ -592,8 +624,12 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
   transition: opacity .5s ease, transform .8s ease;
 }
 .card__img--hover { opacity: 0; }
-.card--has-hover:hover .card__img--hover { opacity: 1; }
-.card:hover .card__img { transform: scale(1.03); }
+
+/* Hover hatás csak egérrel (érintőképernyőn beragadna / dupla koppintást kérne) */
+@media (hover: hover) {
+  .card--has-hover:hover .card__img--hover { opacity: 1; }
+  .card:hover .card__img { transform: scale(1.03); }
+}
 
 .card__badges { position: absolute; top: 14px; left: 14px; display: flex; gap: 6px; }
 
@@ -639,7 +675,9 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .tile__media { position: absolute; inset: 0; }
 .tile__media img,
 .tile__media .placeholder-svg { width: 100%; height: 100%; object-fit: cover; transition: transform .8s ease; }
-.tile:hover .tile__media img { transform: scale(1.04); }
+@media (hover: hover) {
+  .tile:hover .tile__media img { transform: scale(1.04); }
+}
 .tile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(10,10,10,.7) 0%, rgba(10,10,10,0) 55%); }
 .tile__title, .tile__cta { position: relative; z-index: 1; }
 .tile__title { font-family: var(--font-display); font-size: 22px; font-weight: 300; letter-spacing: .2em; text-transform: uppercase; }
@@ -834,6 +872,44 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .facet__option input { width: 16px; height: 16px; accent-color: var(--color-text); }
 .facet__option--disabled { opacity: .4; cursor: not-allowed; }
 .facet__active { display: flex; flex-wrap: wrap; gap: 8px; margin: -16px 0 28px; }
+.facet__panel-title { display: none; }
+
+/* Mobilon a szűrő alulról felcsúszó panelként nyílik, sötétített háttérrel.
+   A háttérre koppintás a <summary>-re esik, így bezárja a panelt (JS nélkül is). */
+@media (max-width: 749px) {
+  .facet[open] summary::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, .6);
+    cursor: pointer;
+  }
+  .facet__panel {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 101;
+    min-width: 0;
+    max-height: 70vh;
+    padding: 8px var(--gutter) calc(24px + env(safe-area-inset-bottom));
+    border-width: 1px 0 0;
+  }
+  .facet__panel-title {
+    display: block;
+    padding: 18px 0 14px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--color-line);
+    font-family: var(--font-display);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+  .facet__option { min-height: 48px; font-size: 15px; }
+}
 
 .empty-state { padding: 80px 0; text-align: center; color: var(--color-text-soft); display: flex; flex-direction: column; align-items: center; gap: 24px; }
 
@@ -1056,6 +1132,14 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .password__admin a { text-decoration: underline; text-underline-offset: 3px; }
 
 .list-collections { padding-top: 56px; padding-bottom: 110px; }
+
+/* iOS Safari ránagyít az oldalra, ha 16 px-nél kisebb betűs mezőbe koppintanak */
+@media (max-width: 749px) {
+  .field,
+  .qty input,
+  .sort .field { font-size: 16px; }
+  .sort .field { letter-spacing: .1em; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }

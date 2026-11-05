@@ -84,6 +84,7 @@ layout/theme.liquid        váz: header-group, main, footer-group, cart-drawer, 
 layout/password.liquid     jelszóoldal váza
 config/settings_schema.json témabeállítások (logó, színek, oldalszélesség, kosár típus, ingyenes szállítás határ, social)
 locales/hu.default.json    MINDEN felületi szöveg itt van (magyar az alapértelmezett nyelv)
+locales/en.json            ugyanezek a kulcsok angolul (a kulcskészlet a két fájlban mindig egyezzen)
 assets/theme.css           összes stílus, szakaszokra bontva
 assets/theme.js            drawer-ek, prediktív keresés, hero csúszka, változatválasztó, kosár Ajax API, ajánlások, szűrők
 ```
@@ -102,12 +103,17 @@ assets/theme.js            drawer-ek, prediktív keresés, hero csúszka, válto
 - `main-search`, `main-page`, `main-404`, `main-list-collections`, `main-password`
 
 **Snippetek:** `product-card`, `price`, `cart-item`, `shipping-bar`, `pagination`, `icon`, `logo`,
-`social-links`, `css-variables`, `fonts`, `meta-tags`
+`social-links`, `language-switcher`, `css-variables`, `fonts`, `meta-tags`
 
 ### Konvenciók
 
-- Minden felhasználónak látható szöveg a `locales/hu.default.json`-ba, `{{ 'kulcs' | t }}`-vel.
+- Minden felhasználónak látható szöveg a `locales/hu.default.json`-ba **és** a `locales/en.json`-ba, `{{ 'kulcs' | t }}`-vel.
   Kivétel: a szekciók `{% schema %}` címkéi és alapértékei – ezek közvetlenül magyarul vannak.
+  Liquidben ne legyen beégetett szöveg alapértékként se (`| default: 'Szöveg'` helyett `assign` + `t`).
+- Kétnyelvű bolt: magyar az alapértelmezett, angol másodlagos (`/en/` URL-ek). Nyelvváltó: `snippets/language-switcher.liquid`
+  (fejléc jobb oldal asztalin, menüpanel alja mobilon), csak akkor látszik, ha a boltban 1-nél több nyelv van közzétéve.
+  A téma szövegei a locale fájlokból jönnek; a bolt tartalmát (termékek, kollekciók, menük, oldalak, a szerkesztőben
+  beírt szekciószövegek) a **Translate & Adapt** app fordítja.
 - Range beállításoknál a `default` legyen a `step` többszöröse a `min`-től számolva (különben a Shopify elutasítja).
 - Liquid tag-paraméterben nincs szűrő és nincs `{{ }}` interpoláció: előbb `assign`, utána add át.
 - Ne nevezz el változót globális objektum nevére (`collection`, `product` stb.), ha nem az.
