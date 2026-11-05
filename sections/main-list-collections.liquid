@@ -1,0 +1,30 @@
+<div class="list-collections page-width">
+  <h1 class="page__title display">{{ section.settings.title }}</h1>
+  <div class="tiles" style="--tile-cols: 3; --tile-height: 420px;">
+    {%- for c in collections -%}
+      {%- unless c.handle == 'frontpage' -%}
+        <a href="{{ c.url }}" class="tile">
+          <div class="tile__media">
+            {%- if c.featured_image -%}
+              {{ c.featured_image | image_url: width: 1200 | image_tag: loading: 'lazy', widths: '500,800,1200', sizes: '(min-width: 990px) 33vw, 100vw', alt: c.title }}
+            {%- else -%}
+              {{ 'collection-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </div>
+          <span class="tile__title">{{ c.title }}</span>
+          <span class="tile__cta">{{ 'general.shop_now' | t }} {% render 'icon', icon: 'arrow' %}</span>
+        </a>
+      {%- endunless -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Kollekciók listája",
+  "class": "section-list-collections",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Cím", "default": "Kollekciók" }
+  ]
+}
+{% endschema %}

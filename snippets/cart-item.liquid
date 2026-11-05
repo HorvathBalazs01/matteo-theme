@@ -1,0 +1,48 @@
+{%- comment -%}
+  Egy kosár tétel. Használja a kosár oldal és a kosár panel is.
+  - item: line_item
+  - index: a tétel sorszáma (1-től)
+  - context: 'page' vagy 'drawer'
+{%- endcomment -%}
+<div class="cart-item" data-line="{{ index }}" data-key="{{ item.key }}">
+  <a href="{{ item.url }}" class="cart-item__media" tabindex="-1" aria-hidden="true">
+    {%- if item.image -%}
+      {{ item.image | image_url: width: 240 | image_tag: loading: 'lazy', alt: '' }}
+    {%- endif -%}
+  </a>
+  <div class="cart-item__details">
+    <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title }}</a>
+    {%- unless item.product.has_only_default_variant -%}
+      <span class="cart-item__variant">{{ item.variant.title }}</span>
+    {%- endunless -%}
+    {%- for property in item.properties -%}
+      {%- assign first_char = property.first | slice: 0 -%}
+      {%- if property.last != blank and first_char != '_' -%}
+        <span class="cart-item__variant">{{ property.first }}: {{ property.last }}</span>
+      {%- endif -%}
+    {%- endfor -%}
+    <div class="cart-item__actions">
+      <div class="qty">
+        <button type="button" data-qty-change="-1" aria-label="{{ 'products.decrease' | t }}">{% render 'icon', icon: 'minus' %}</button>
+        <label for="qty-{{ context }}-{{ index }}" class="visually-hidden">{{ 'products.quantity' | t }}</label>
+        <input
+          type="number"
+          id="qty-{{ context }}-{{ index }}"
+          name="updates[]"
+          value="{{ item.quantity }}"
+          min="0"
+          inputmode="numeric"
+          data-qty-input
+        >
+        <button type="button" data-qty-change="1" aria-label="{{ 'products.increase' | t }}">{% render 'icon', icon: 'plus' %}</button>
+      </div>
+      <a href="{{ item.url_to_remove }}" class="cart-item__remove" data-remove>{{ 'cart.remove' | t }}</a>
+    </div>
+  </div>
+  <div class="cart-item__price">
+    {%- if item.original_line_price > item.final_line_price -%}
+      <s>{{ item.original_line_price | money }}</s>
+    {%- endif -%}
+    {{ item.final_line_price | money }}
+  </div>
+</div>

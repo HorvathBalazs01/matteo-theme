@@ -1,0 +1,54 @@
+{%- if section.blocks.size > 0 -%}
+  <section class="trust" style="--trust-cols: {{ section.blocks.size }};">
+    {%- for block in section.blocks -%}
+      <div class="trust__item" {{ block.shopify_attributes }}>
+        {% render 'icon', icon: block.settings.icon %}
+        <div>
+          {%- if block.settings.title != blank -%}<div class="trust__title">{{ block.settings.title }}</div>{%- endif -%}
+          {%- if block.settings.text != blank -%}<div class="trust__text">{{ block.settings.text }}</div>{%- endif -%}
+        </div>
+      </div>
+    {%- endfor -%}
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Előnysáv",
+  "class": "section-trust",
+  "max_blocks": 4,
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Előny",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Ikon",
+          "options": [
+            { "value": "truck", "label": "Szállítás" },
+            { "value": "shield", "label": "Biztonság" },
+            { "value": "return", "label": "Visszaküldés" },
+            { "value": "headset", "label": "Ügyfélszolgálat" }
+          ],
+          "default": "truck"
+        },
+        { "type": "text", "id": "title", "label": "Cím", "default": "Ingyenes szállítás" },
+        { "type": "text", "id": "text", "label": "Szöveg", "default": "30.000 Ft felett" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Előnysáv",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "truck", "title": "Ingyenes szállítás", "text": "30.000 Ft felett" } },
+        { "type": "item", "settings": { "icon": "shield", "title": "Biztonságos fizetés", "text": "Bankkártyával" } },
+        { "type": "item", "settings": { "icon": "return", "title": "14 napos visszaküldés", "text": "Kockázat nélkül" } },
+        { "type": "item", "settings": { "icon": "headset", "title": "Ügyfélszolgálat", "text": "Hétköznap 8–16h" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

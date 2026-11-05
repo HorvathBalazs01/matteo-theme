@@ -1,0 +1,16 @@
+{%- comment -%}
+  A márka logója. Ha a Témabeállítások → Logó üres, a témába épített assets/logo.png jelenik meg.
+  A szélességet a szülő elem adja meg (a logó 100%-ban kitölti).
+  - eager: true esetén nem lazy-load
+{%- endcomment -%}
+{%- liquid
+  assign loading = 'lazy'
+  if eager
+    assign loading = 'eager'
+  endif
+-%}
+{%- if settings.logo != blank -%}
+  {{ settings.logo | image_url: width: 800 | image_tag: alt: shop.name, class: 'logo', loading: loading, widths: '200,400,600,800', sizes: '400px' }}
+{%- else -%}
+  <img src="{{ 'logo.png' | asset_url }}" alt="{{ shop.name | escape }}" class="logo" width="1148" height="296" loading="{{ loading }}">
+{%- endif -%}

@@ -1,0 +1,71 @@
+{%- comment -%}
+  Termékkártya a rácsokhoz.
+  - product: a termék (ha üres, helyőrző kártya)
+  - sizes: a kép sizes attribútuma
+{%- endcomment -%}
+{%- liquid
+  assign img_sizes = sizes | default: '(min-width: 990px) 25vw, 50vw'
+-%}
+{%- if product != blank -%}
+  {%- liquid
+    assign is_new = false
+    for tag in product.tags
+      assign t = tag | downcase
+      if t == 'uj' or t == 'új' or t == 'new'
+        assign is_new = true
+      endif
+    endfor
+    assign color_values = ''
+    for option in product.options_with_values
+      assign option_name = option.name | downcase
+      if option_name == 'szín' or option_name == 'szin' or option_name == 'color' or option_name == 'colour'
+        for value in option.values
+          if forloop.first
+            assign color_values = value
+          else
+            assign color_values = color_values | append: ' / ' | append: value
+          endif
+        endfor
+      endif
+    endfor
+  -%}
+  <a href="{{ product.url }}" class="card{% if product.media.size > 1 %} card--has-hover{% endif %}">
+    <div class="card__media">
+      {%- if product.featured_media -%}
+        {%- assign img_alt = product.featured_media.alt | default: product.title | escape -%}
+        {{ product.featured_media | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300,450,600,900', sizes: img_sizes, class: 'card__img', alt: img_alt }}
+        {%- if product.media.size > 1 -%}
+          {{ product.media[1] | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300,450,600,900', sizes: img_sizes, class: 'card__img card__img--hover', alt: '' }}
+        {%- endif -%}
+      {%- else -%}
+        {{ 'product-apparel-1' | placeholder_svg_tag: 'card__placeholder' }}
+      {%- endif -%}
+      <div class="card__badges">
+        {%- if product.available == false -%}
+          <span class="badge badge--muted">{{ 'products.sold_out' | t }}</span>
+        {%- elsif product.compare_at_price > product.price -%}
+          <span class="badge">{{ 'products.sale' | t }}</span>
+        {%- elsif is_new -%}
+          <span class="badge">{{ 'products.new' | t }}</span>
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="card__info">
+      <span class="card__title">{{ product.title }}</span>
+      <span class="card__price">{% render 'price', product: product %}</span>
+    </div>
+    {%- if color_values != blank -%}
+      <span class="card__meta">{{ color_values }}</span>
+    {%- endif -%}
+  </a>
+{%- else -%}
+  <div class="card card--placeholder">
+    <div class="card__media">
+      {{ 'product-apparel-1' | placeholder_svg_tag: 'card__placeholder' }}
+    </div>
+    <div class="card__info">
+      <span class="card__title">{{ 'products.placeholder_title' | t }}</span>
+      <span class="card__price">{{ 19990 | times: 100 | money }}</span>
+    </div>
+  </div>
+{%- endif -%}

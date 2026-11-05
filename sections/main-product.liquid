@@ -1,0 +1,271 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign form_id = 'product-form-' | append: section.id
+-%}
+
+<section class="product page-width" data-product data-section-id="{{ section.id }}" data-product-url="{{ product.url }}">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
+    <span aria-hidden="true">/</span>
+    {%- if collection -%}
+      <a href="{{ collection.url }}">{{ collection.title }}</a>
+      <span aria-hidden="true">/</span>
+    {%- endif -%}
+    <span aria-current="page">{{ product.title }}</span>
+  </nav>
+
+  <div class="product__grid">
+    <div class="product__gallery" data-gallery>
+      {%- if product.media.size > 0 -%}
+        {%- for media in product.media -%}
+          {%- liquid
+            assign is_large = false
+            if forloop.first and section.settings.large_first
+              assign is_large = true
+            endif
+            assign loading = 'lazy'
+            if forloop.index <= 2
+              assign loading = 'eager'
+            endif
+            assign media_alt = media.alt | default: product.title | escape
+          -%}
+          <div class="product__media{% if is_large %} product__media--large{% endif %}" data-media-id="{{ media.id }}">
+            {%- if media.media_type == 'image' -%}
+              {{ media | image_url: width: 1800 | image_tag: loading: loading, widths: '500,750,1000,1400,1800', sizes: '(min-width: 990px) 33vw, 86vw', alt: media_alt }}
+            {%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}
+              {{ media | media_tag: image_size: '1400x', autoplay: true, loop: true, muted: true, controls: false }}
+            {%- else -%}
+              {{ media | media_tag }}
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <div class="product__media product__media--large">{{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+        <div class="product__media">{{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+        <div class="product__media">{{ 'product-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+      {%- endif -%}
+    </div>
+
+    <div class="product__info">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'title' -%}
+            <div class="product__block" {{ block.shopify_attributes }}>
+              {%- if block.settings.eyebrow != blank -%}
+                <span class="product__eyebrow">{{ block.settings.eyebrow }}</span>
+              {%- elsif product.type != blank -%}
+                <span class="product__eyebrow">{{ product.type }}</span>
+              {%- endif -%}
+              <h1 class="product__title display">{{ product.title }}</h1>
+            </div>
+
+          {%- when 'price' -%}
+            <div class="product__block" {{ block.shopify_attributes }}>
+              <div class="product__price" data-price>
+                {% render 'price', product: product, use_variant: true %}
+              </div>
+              {%- if block.settings.show_tax_note -%}
+                <span class="product__tax">{{ 'cart.taxes' | t }}</span>
+              {%- endif -%}
+            </div>
+
+          {%- when 'variant_picker' -%}
+            {%- unless product.has_only_default_variant -%}
+              <div class="product__block" data-variant-picker {{ block.shopify_attributes }}>
+                {%- for option in product.options_with_values -%}
+                  {%- assign option_index = forloop.index0 -%}
+                  <fieldset class="option" data-option-index="{{ option_index }}">
+                    <legend class="option__legend">
+                      <div>{{ option.name }}: <span data-selected-value>{{ option.selected_value }}</span></div>
+                    </legend>
+                    <div class="option__values">
+                      {%- for value in option.values -%}
+                        {%- assign input_id = section.id | append: '-' | append: option.position | append: '-' | append: forloop.index0 -%}
+                        <div class="option__value{% if value.swatch %} option__value--swatch{% endif %}{% unless value.available %} is-unavailable{% endunless %}">
+                          <input
+                            type="radio"
+                            id="{{ input_id }}"
+                            name="{{ section.id }}-option-{{ option.position }}"
+                            value="{{ value | escape }}"
+                            {% if option.selected_value == value %}checked{% endif %}
+                            data-option-value
+                          >
+                          <label for="{{ input_id }}" {% if value.swatch %}title="{{ value | escape }}"{% endif %}>
+                            {%- if value.swatch -%}
+                              {%- if value.swatch.image -%}
+                                {%- assign swatch_bg = value.swatch.image | image_url: width: 60 -%}
+                                <span class="swatch" style="background: url({{ swatch_bg }}) center / cover;"></span>
+                              {%- else -%}
+                                <span class="swatch" style="background: {{ value.swatch.color }};"></span>
+                              {%- endif -%}
+                              <span class="visually-hidden">{{ value }}</span>
+                            {%- else -%}
+                              {{ value }}
+                            {%- endif -%}
+                          </label>
+                        </div>
+                      {%- endfor -%}
+                    </div>
+                  </fieldset>
+                {%- endfor -%}
+                {%- if block.settings.size_chart_page != blank -%}
+                  <a href="{{ block.settings.size_chart_page.url }}" class="link-underline" style="align-self: flex-start; color: var(--color-text-soft);">{{ block.settings.size_chart_label }}</a>
+                {%- endif -%}
+                <script type="application/json" data-variants>
+                  {{ product.variants | json }}
+                </script>
+              </div>
+            {%- endunless -%}
+
+          {%- when 'buy_buttons' -%}
+            <div class="product__block" {{ block.shopify_attributes }}>
+              {%- form 'product', product, id: form_id, class: 'product__form', novalidate: 'novalidate', data-product-form: '' -%}
+                <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+                <div class="product__buttons" data-buy-buttons>
+                  <button
+                    type="submit"
+                    name="add"
+                    class="btn btn--solid btn--full"
+                    data-add-button
+                    {% unless current_variant.available %}disabled{% endunless %}
+                  >
+                    <span data-add-label>
+                      {%- if current_variant.available -%}
+                        {{ 'products.add_to_cart' | t }}
+                      {%- else -%}
+                        {{ 'products.sold_out' | t }}
+                      {%- endif -%}
+                    </span>
+                  </button>
+                  {%- if block.settings.pair_product != blank and block.settings.pair_product.id != product.id -%}
+                    <a href="{{ block.settings.pair_product.url }}" class="btn btn--full">
+                      {{ block.settings.pair_label | default: 'Szettként' }}: + {{ block.settings.pair_product.title }}
+                    </a>
+                  {%- endif -%}
+                </div>
+                <p class="product__error" role="alert" data-form-error></p>
+              {%- endform -%}
+            </div>
+
+          {%- when 'perks' -%}
+            {%- if block.settings.lines != blank -%}
+              {%- assign lines = block.settings.lines | newline_to_br | split: '<br />' -%}
+              <ul class="perks" {{ block.shopify_attributes }}>
+                {%- for line in lines -%}
+                  {%- assign l = line | strip -%}
+                  {%- if l != blank -%}<li>{{ l }}</li>{%- endif -%}
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+
+          {%- when 'description' -%}
+            {%- if product.description != blank -%}
+              <div class="accordion" {{ block.shopify_attributes }}>
+                <details {% if block.settings.open %}open{% endif %}>
+                  <summary>{{ block.settings.heading }} {% render 'icon', icon: 'plus' %}{% render 'icon', icon: 'minus' %}</summary>
+                  <div class="accordion__content rte">{{ product.description }}</div>
+                </details>
+              </div>
+            {%- endif -%}
+
+          {%- when 'collapsible' -%}
+            <div class="accordion" {{ block.shopify_attributes }}>
+              <details>
+                <summary>{{ block.settings.heading }} {% render 'icon', icon: 'plus' %}{% render 'icon', icon: 'minus' %}</summary>
+                <div class="accordion__content rte">
+                  {{ block.settings.content }}
+                  {%- if block.settings.page != blank -%}{{ block.settings.page.content }}{%- endif -%}
+                </div>
+              </details>
+            </div>
+
+          {%- when 'text' -%}
+            <div class="product__block rte" {{ block.shopify_attributes }}>{{ block.settings.text }}</div>
+
+          {%- when '@app' -%}
+            {% render block %}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Termék",
+  "class": "section-main-product",
+  "settings": [
+    { "type": "checkbox", "id": "large_first", "label": "Első kép nagyban", "default": true }
+  ],
+  "blocks": [
+    { "type": "@app" },
+    {
+      "type": "title",
+      "name": "Cím",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "eyebrow", "label": "Felirat a cím fölött", "info": "Ha üres, a terméktípus jelenik meg." }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Ár",
+      "limit": 1,
+      "settings": [
+        { "type": "checkbox", "id": "show_tax_note", "label": "ÁFA megjegyzés megjelenítése", "default": false }
+      ]
+    },
+    {
+      "type": "variant_picker",
+      "name": "Változatválasztó",
+      "limit": 1,
+      "settings": [
+        { "type": "page", "id": "size_chart_page", "label": "Mérettáblázat oldal" },
+        { "type": "text", "id": "size_chart_label", "label": "Mérettáblázat link szövege", "default": "Mérettáblázat" }
+      ]
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Kosárba gomb",
+      "limit": 1,
+      "settings": [
+        { "type": "product", "id": "pair_product", "label": "Szett párja", "info": "Pl. a pulóverhez a hozzá illő nadrág." },
+        { "type": "text", "id": "pair_label", "label": "Szett gomb szövege", "default": "Szettként" }
+      ]
+    },
+    {
+      "type": "perks",
+      "name": "Előnyök lista",
+      "limit": 1,
+      "settings": [
+        { "type": "textarea", "id": "lines", "label": "Sorok (soronként egy)", "default": "Ingyenes szállítás 30.000 Ft felett\n14 napos visszaküldés, kockázat nélkül" }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Leírás",
+      "limit": 1,
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Cím", "default": "Leírás" },
+        { "type": "checkbox", "id": "open", "label": "Alapból nyitva", "default": true }
+      ]
+    },
+    {
+      "type": "collapsible",
+      "name": "Lenyíló szöveg",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Cím", "default": "Anyag és ápolás" },
+        { "type": "richtext", "id": "content", "label": "Szöveg" },
+        { "type": "page", "id": "page", "label": "Vagy egy oldal tartalma" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Szöveg",
+      "settings": [
+        { "type": "richtext", "id": "text", "label": "Szöveg" }
+      ]
+    }
+  ]
+}
+{% endschema %}

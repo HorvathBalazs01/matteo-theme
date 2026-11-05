@@ -1,0 +1,98 @@
+{
+  "general": {
+    "skip": "Ugrás a tartalomra",
+    "close": "Bezárás",
+    "menu": "Menü",
+    "search": "Keresés",
+    "account": "Fiókom",
+    "cart": "Kosár",
+    "home": "Kezdőlap",
+    "view_all": "Összes termék",
+    "shop_now": "Vásárlás",
+    "continue_shopping": "Vásárlás folytatása",
+    "error": "Hiba történt, kérjük próbáld újra.",
+    "previous_slide": "Előző dia",
+    "next_slide": "Következő dia",
+    "go_to_slide": "Ugrás a(z) {{ number }}. diára"
+  },
+  "products": {
+    "from": "{{ price }}-tól",
+    "regular_price": "Eredeti ár",
+    "sale_price": "Akciós ár",
+    "sale": "Akció",
+    "new": "Új",
+    "sold_out": "Elfogyott",
+    "unavailable": "Nem elérhető",
+    "add_to_cart": "Kosárba",
+    "quantity": "Mennyiség",
+    "decrease": "Mennyiség csökkentése",
+    "increase": "Mennyiség növelése",
+    "placeholder_title": "Termék neve",
+    "recommendations": "Ezeket is ajánljuk"
+  },
+  "cart": {
+    "title": "Kosár",
+    "empty": "A kosarad üres.",
+    "subtotal": "Részösszeg",
+    "checkout": "Tovább a pénztárhoz",
+    "remove": "Eltávolítás",
+    "update": "Kosár frissítése",
+    "note": "Megjegyzés a rendeléshez",
+    "taxes": "Az árak tartalmazzák az ÁFA-t. A szállítási díjat a pénztárban számoljuk.",
+    "free_shipping_reached": "Ingyenes szállítást kapsz!",
+    "free_shipping_remaining": "Még {{ amount }} és ingyen szállítunk.",
+    "view_cart": "Kosár megtekintése",
+    "product": "Termék",
+    "total": "Összesen"
+  },
+  "collections": {
+    "products_count": {
+      "one": "{{ count }} termék",
+      "other": "{{ count }} termék"
+    },
+    "sort": "Rendezés",
+    "filter": "Szűrés",
+    "clear": "Szűrők törlése",
+    "apply": "Alkalmaz",
+    "empty": "Nincs a feltételeknek megfelelő termék.",
+    "all": "Összes"
+  },
+  "search": {
+    "title": "Keresés",
+    "placeholder": "Mit keresel?",
+    "submit": "Keresés indítása",
+    "results": {
+      "one": "{{ count }} találat erre: „{{ terms }}”",
+      "other": "{{ count }} találat erre: „{{ terms }}”"
+    },
+    "no_results": "Nincs találat erre: „{{ terms }}”."
+  },
+  "newsletter": {
+    "email": "E-mail cím",
+    "placeholder": "E-mail címed",
+    "subscribe": "Feliratkozás",
+    "success": "Köszönjük, feliratkoztál!"
+  },
+  "pagination": {
+    "label": "Lapozás",
+    "previous": "Előző oldal",
+    "next": "Következő oldal",
+    "page": "{{ number }}. oldal"
+  },
+  "not_found": {
+    "title": "Az oldal nem található",
+    "text": "A keresett oldal nem létezik, vagy elköltözött."
+  },
+  "password": {
+    "title": "Hamarosan nyitunk",
+    "enter": "Belépés jelszóval",
+    "label": "Jelszó",
+    "submit": "Belépés",
+    "admin": "Tulajdonos vagy?",
+    "admin_link": "Belépés ide"
+  },
+  "footer": {
+    "copyright": "Minden jog fenntartva.",
+    "payment": "Fizetési módok"
+  }
+}

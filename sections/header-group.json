@@ -1,0 +1,21 @@
+{
+  "type": "header",
+  "name": "Fejléc csoport",
+  "sections": {
+    "announcement": {
+      "type": "announcement-bar",
+      "settings": {
+        "text": "Ingyenes szállítás 30.000 Ft felett",
+        "link": ""
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "menu_left": "main-menu",
+        "sticky": false
+      }
+    }
+  },
+  "order": ["announcement", "header"]
+}

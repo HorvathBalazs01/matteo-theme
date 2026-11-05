@@ -1,0 +1,23 @@
+{%- comment -%}
+  A témabeállításokban megadott színek CSS változóként.
+{%- endcomment -%}
+<style>
+  :root {
+    --color-bg: {{ settings.color_bg }};
+    --color-bg-deep: {{ settings.color_bg_deep }};
+    --color-surface: {{ settings.color_surface }};
+    --color-line: {{ settings.color_line }};
+    --color-line-strong: {{ settings.color_line_strong }};
+    --color-text: {{ settings.color_text }};
+    --color-text-soft: {{ settings.color_text_soft }};
+    --color-muted: {{ settings.color_muted }};
+    --color-placeholder: {{ settings.color_placeholder }};
+
+    --font-display: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+    --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+
+    --page-width: {{ settings.page_width }}px;
+    --gutter: clamp(16px, 3vw, 40px);
+    --logo-width: {{ settings.logo_width }}px;
+  }
+</style>

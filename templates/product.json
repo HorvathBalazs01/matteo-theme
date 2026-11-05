@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": { "type": "title", "settings": {} },
+        "price": { "type": "price", "settings": { "show_tax_note": false } },
+        "variants": { "type": "variant_picker", "settings": { "size_chart_label": "Mérettáblázat" } },
+        "buy": { "type": "buy_buttons", "settings": { "pair_label": "Szettként" } },
+        "perks": { "type": "perks", "settings": { "lines": "Ingyenes szállítás 30.000 Ft felett\n14 napos visszaküldés, kockázat nélkül" } },
+        "description": { "type": "description", "settings": { "heading": "Leírás", "open": true } },
+        "care": { "type": "collapsible", "settings": { "heading": "Anyag és ápolás", "content": "<p>[ANYAGÖSSZETÉTEL, MOSÁSI ÚTMUTATÓ]</p>" } },
+        "shipping": { "type": "collapsible", "settings": { "heading": "Szállítás és visszaküldés", "content": "<p>Ingyenes szállítás 30.000 Ft feletti rendelés esetén. 14 napon belül indoklás nélkül visszaküldheted a terméket.</p>" } }
+      },
+      "block_order": ["title", "price", "variants", "buy", "perks", "description", "care", "shipping"],
+      "settings": { "large_first": true }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": { "heading": "Ezeket is ajánljuk", "limit": 4 }
+    }
+  },
+  "order": ["main", "recommendations"]
+}

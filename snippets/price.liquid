@@ -1,0 +1,29 @@
+{%- comment -%}
+  Ár megjelenítése.
+  - product: a termék
+  - use_variant: true esetén a kiválasztott változat ára
+{%- endcomment -%}
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+  assign price = target.price | money
+  assign compare_at = target.compare_at_price
+  if use_variant == blank and product.price_varies
+    assign min_price = product.price_min | money
+    assign price = 'products.from' | t: price: min_price
+    assign compare_at = product.compare_at_price_max
+  endif
+-%}
+<span class="price{% if compare_at > target.price %} price--sale{% endif %}">
+  {%- if compare_at > target.price -%}
+    <span class="visually-hidden">{{ 'products.sale_price' | t }}</span>
+    <span class="price__current">{{ price }}</span>
+    <span class="visually-hidden">{{ 'products.regular_price' | t }}</span>
+    <s class="price__compare">{{ compare_at | money }}</s>
+  {%- else -%}
+    <span class="price__current">{{ price }}</span>
+  {%- endif -%}
+</span>

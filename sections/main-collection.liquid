@@ -1,0 +1,137 @@
+{%- liquid
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+  assign per_page = section.settings.per_page
+-%}
+
+{%- if section.settings.show_banner -%}
+  <section class="page-banner">
+    {%- if section.settings.show_image and collection.image -%}
+      <div class="page-banner__media">
+        {{ collection.image | image_url: width: 2000 | image_tag: loading: 'eager', widths: '750,1200,1600,2000', sizes: '100vw', alt: collection.title }}
+      </div>
+    {%- endif -%}
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{{ collection.title }}</span>
+    </nav>
+    <h1 class="page-banner__title display">{{ collection.title }}</h1>
+    {%- if collection.description != blank -%}
+      <div class="page-banner__text rte">{{ collection.description }}</div>
+    {%- endif -%}
+  </section>
+{%- endif -%}
+
+<div class="page-width section" style="--pad-top: 0px; --pad-bottom: 110px;" data-collection>
+  {%- paginate collection.products by per_page -%}
+    <form class="toolbar" action="{{ collection.url }}" method="get" data-facets-form>
+      <div class="toolbar__left">
+        {%- if section.settings.quick_links != blank -%}
+          {%- for link in section.settings.quick_links.links -%}
+            <a href="{{ link.url }}" class="pill{% if link.active or link.current %} is-active{% endif %}">{{ link.title }}</a>
+          {%- endfor -%}
+        {%- endif -%}
+
+        {%- if section.settings.enable_filtering -%}
+          {%- for filter in collection.filters -%}
+            {%- if filter.type == 'list' or filter.type == 'boolean' -%}
+              <details class="facet">
+                <summary class="pill">
+                  {{ filter.label }}
+                  {%- if filter.active_values.size > 0 %} ({{ filter.active_values.size }}){% endif %}
+                  {% render 'icon', icon: 'chevron' %}
+                </summary>
+                <div class="facet__panel">
+                  {%- for value in filter.values -%}
+                    {%- assign input_id = 'filter-' | append: filter.param_name | append: '-' | append: forloop.index | handleize -%}
+                    <label for="{{ input_id }}" class="facet__option{% if value.count == 0 and value.active == false %} facet__option--disabled{% endif %}">
+                      <input
+                        type="checkbox"
+                        id="{{ input_id }}"
+                        name="{{ value.param_name }}"
+                        value="{{ value.value }}"
+                        {% if value.active %}checked{% endif %}
+                        {% if value.count == 0 and value.active == false %}disabled{% endif %}
+                      >
+                      {{ value.label }} ({{ value.count }})
+                    </label>
+                  {%- endfor -%}
+                </div>
+              </details>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+
+      <div class="toolbar__right">
+        <span class="toolbar__count">{{ 'collections.products_count' | t: count: collection.products_count }}</span>
+        {%- if section.settings.enable_sorting -%}
+          <div class="sort">
+            <label for="sort-by" class="label">{{ 'collections.sort' | t }}:</label>
+            <select id="sort-by" name="sort_by" class="field" data-auto-submit>
+              {%- for option in collection.sort_options -%}
+                <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name | escape }}</option>
+              {%- endfor -%}
+            </select>
+          </div>
+        {%- endif -%}
+        <noscript><button type="submit" class="pill">{{ 'collections.apply' | t }}</button></noscript>
+      </div>
+    </form>
+
+    {%- liquid
+      assign active_count = 0
+      for filter in collection.filters
+        assign active_count = active_count | plus: filter.active_values.size
+      endfor
+    -%}
+    {%- if active_count > 0 -%}
+      <div class="facet__active">
+        {%- for filter in collection.filters -%}
+          {%- for value in filter.active_values -%}
+            <a href="{{ value.url_to_remove }}" class="pill is-active">{{ value.label }} {% render 'icon', icon: 'close' %}</a>
+          {%- endfor -%}
+        {%- endfor -%}
+        <a href="{{ collection.url }}?sort_by={{ sort_by }}" class="pill">{{ 'collections.clear' | t }}</a>
+      </div>
+    {%- endif -%}
+
+    {%- if collection.products.size > 0 -%}
+      <div class="grid" style="--cols: {{ section.settings.columns }};">
+        {%- for product in collection.products -%}
+          {% render 'product-card', product: product %}
+        {%- endfor -%}
+      </div>
+    {%- else -%}
+      <div class="empty-state">
+        <p>{{ 'collections.empty' | t }}</p>
+        {%- if active_count > 0 -%}
+          <a href="{{ collection.url }}" class="btn">{{ 'collections.clear' | t }}</a>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {% render 'pagination', paginate: paginate %}
+  {%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Kollekció termékei",
+  "class": "section-main-collection",
+  "settings": [
+    { "type": "checkbox", "id": "show_banner", "label": "Fejléc sáv megjelenítése", "default": true },
+    { "type": "checkbox", "id": "show_image", "label": "Kollekció képe a fejléc sávban", "default": true },
+    {
+      "type": "link_list",
+      "id": "quick_links",
+      "label": "Gyorslinkek (pl. Összes / Szettek / Pulóverek / Nadrágok)",
+      "info": "Készíts hozzá egy menüt a kollekciókkal: Online áruház → Navigáció."
+    },
+    { "type": "checkbox", "id": "enable_filtering", "label": "Szűrők megjelenítése", "default": true, "info": "A szűrőket a Search & Discovery appban állíthatod be." },
+    { "type": "checkbox", "id": "enable_sorting", "label": "Rendezés megjelenítése", "default": true },
+    { "type": "range", "id": "per_page", "label": "Termékek oldalanként", "min": 8, "max": 48, "step": 4, "default": 16 },
+    { "type": "range", "id": "columns", "label": "Oszlopok asztali nézetben", "min": 2, "max": 5, "step": 1, "default": 4 }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,30 @@
+<section
+  class="section page-width"
+  style="--pad-top: 0px; --pad-bottom: 110px;"
+  data-recommendations
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.limit }}&intent=related"
+>
+  {%- if recommendations.performed and recommendations.products_count > 0 -%}
+    <div class="section-head">
+      {%- assign rec_heading = section.settings.heading -%}
+      {%- if rec_heading == blank -%}{%- assign rec_heading = 'products.recommendations' | t -%}{%- endif -%}
+      <h2 class="section-title">{{ rec_heading }}</h2>
+    </div>
+    <div class="grid" style="--cols: {{ section.settings.limit }};">
+      {%- for product in recommendations.products -%}
+        {% render 'product-card', product: product %}
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "Ajánlott termékek",
+  "class": "section-recommendations",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Cím", "default": "Ezeket is ajánljuk" },
+    { "type": "range", "id": "limit", "label": "Termékek száma", "min": 2, "max": 5, "step": 1, "default": 4 }
+  ]
+}
+{% endschema %}

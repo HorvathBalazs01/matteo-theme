@@ -1,0 +1,63 @@
+<section id="rolunk" class="section{% if section.settings.bordered %} section--bordered{% endif %}" style="--pad-top: {{ section.settings.padding_top }}px; --pad-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="page-width about{% if section.settings.image_position == 'right' %} about--reverse{% endif %}">
+    <div class="about__media">
+      {%- if section.settings.image != blank -%}
+        {{ section.settings.image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '600,900,1200,1400', sizes: '(min-width: 990px) 50vw, 100vw' }}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+    <div class="about__content">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="section-title section-title--short">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.show_logo -%}
+        <div class="about__logo">{% render 'logo' %}</div>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="rte about__text">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.settings.signature != blank -%}
+        <span class="about__signature">— {{ section.settings.signature }}</span>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank and section.settings.button_link != blank -%}
+        <a href="{{ section.settings.button_link }}" class="btn" style="align-self: flex-start;">{{ section.settings.button_label }} {% render 'icon', icon: 'arrow' %}</a>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Rólunk",
+  "class": "section-about",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Cím", "default": "Rólunk" },
+    { "type": "image_picker", "id": "image", "label": "Kép", "info": "Pl. fotó a srácokról. Ajánlott arány: 4:3." },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Kép helye",
+      "options": [
+        { "value": "left", "label": "Balra" },
+        { "value": "right", "label": "Jobbra" }
+      ],
+      "default": "left"
+    },
+    { "type": "checkbox", "id": "show_logo", "label": "Logó megjelenítése", "default": true },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Szöveg",
+      "default": "<p>Ide jön a rövid bemutatkozás: 2–3 mondat arról, kik vagytok, honnan jött az ötlet, és mit jelent nektek a Matteo.</p>"
+    },
+    { "type": "text", "id": "signature", "label": "Aláírás", "default": "Az alapítók" },
+    { "type": "text", "id": "button_label", "label": "Gomb szövege (opcionális)" },
+    { "type": "url", "id": "button_link", "label": "Gomb linkje" },
+    { "type": "checkbox", "id": "bordered", "label": "Vonal felül és alul", "default": true },
+    { "type": "range", "id": "padding_top", "label": "Felső térköz", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 112 },
+    { "type": "range", "id": "padding_bottom", "label": "Alsó térköz", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 112 }
+  ],
+  "presets": [{ "name": "Rólunk" }]
+}
+{% endschema %}

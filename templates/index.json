@@ -1,0 +1,106 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "slide-1": {
+          "type": "slide",
+          "settings": {
+            "show_logo": true,
+            "heading": "Minimalista stílus.\nMaximális hatás.",
+            "button_label": "Kollekció megtekintése",
+            "button_link": "shopify://collections/all",
+            "align": "left"
+          }
+        },
+        "slide-2": {
+          "type": "slide",
+          "settings": {
+            "show_logo": true,
+            "heading": "Az új szett.\nMost érkezett.",
+            "button_label": "Megnézem",
+            "button_link": "shopify://collections/all",
+            "align": "left"
+          }
+        },
+        "slide-3": {
+          "type": "slide",
+          "settings": {
+            "show_logo": true,
+            "heading": "Fekete. Fehér.\nMatteo.",
+            "button_label": "Vásárlás",
+            "button_link": "shopify://collections/all",
+            "align": "left"
+          }
+        }
+      },
+      "block_order": ["slide-1", "slide-2", "slide-3"],
+      "settings": {
+        "height": 640,
+        "overlay": 60,
+        "logo_width": 400,
+        "autoplay": true,
+        "speed": 6
+      }
+    },
+    "trust": {
+      "type": "trust-bar",
+      "blocks": {
+        "t1": { "type": "item", "settings": { "icon": "truck", "title": "Ingyenes szállítás", "text": "30.000 Ft felett" } },
+        "t2": { "type": "item", "settings": { "icon": "shield", "title": "Biztonságos fizetés", "text": "Bankkártyával" } },
+        "t3": { "type": "item", "settings": { "icon": "return", "title": "14 napos visszaküldés", "text": "Kockázat nélkül" } },
+        "t4": { "type": "item", "settings": { "icon": "headset", "title": "Ügyfélszolgálat", "text": "Hétköznap 8–16h" } }
+      },
+      "block_order": ["t1", "t2", "t3", "t4"],
+      "settings": {}
+    },
+    "featured": {
+      "type": "featured-collection",
+      "settings": {
+        "heading": "Legnépszerűbb termékeink",
+        "products_to_show": 4,
+        "columns": 4,
+        "link_label": "Összes termék",
+        "padding_top": 72,
+        "padding_bottom": 96
+      }
+    },
+    "tiles": {
+      "type": "collection-tiles",
+      "blocks": {
+        "c1": { "type": "tile", "settings": { "title": "Kapucnis pulóverek", "cta": "Vásárlás" } },
+        "c2": { "type": "tile", "settings": { "title": "Melegítőnadrágok", "cta": "Vásárlás" } },
+        "c3": { "type": "tile", "settings": { "title": "Teljes szettek", "cta": "Vásárlás" } }
+      },
+      "block_order": ["c1", "c2", "c3"],
+      "settings": {
+        "height": 460,
+        "padding_top": 0,
+        "padding_bottom": 96
+      }
+    },
+    "about": {
+      "type": "about",
+      "settings": {
+        "heading": "Rólunk",
+        "image_position": "left",
+        "show_logo": true,
+        "text": "<p>Ide jön a rövid bemutatkozás: 2–3 mondat arról, kik vagytok, honnan jött az ötlet, és mit jelent nektek a Matteo.</p>",
+        "signature": "Az alapítók",
+        "bordered": true,
+        "padding_top": 112,
+        "padding_bottom": 112
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "heading": "Csatlakozz a Matteo közösséghez",
+        "text": "<p>Iratkozz fel, és elsőként értesülsz az új drop-okról.</p>",
+        "padding_top": 96,
+        "padding_bottom": 96
+      }
+    }
+  },
+  "order": ["hero", "trust", "featured", "tiles", "about", "newsletter"]
+}

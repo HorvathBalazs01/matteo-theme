@@ -1,0 +1,78 @@
+<footer class="footer" id="kapcsolat">
+  <div class="page-width footer__grid" style="--footer-cols: {{ section.blocks.size | at_least: 1 }};">
+    {%- for block in section.blocks -%}
+      <div class="footer__col" {{ block.shopify_attributes }}>
+        {%- case block.type -%}
+          {%- when 'brand' -%}
+            <div class="footer__logo">{% render 'logo' %}</div>
+            {%- if block.settings.text != blank -%}
+              <div class="footer__tagline">{{ block.settings.text }}</div>
+            {%- endif -%}
+            {% render 'social-links', class: 'footer__social' %}
+          {%- when 'menu' -%}
+            {%- if block.settings.heading != blank -%}
+              <h3 class="footer__heading">{{ block.settings.heading }}</h3>
+            {%- endif -%}
+            {%- for link in block.settings.menu.links -%}
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            {%- endfor -%}
+          {%- when 'text' -%}
+            {%- if block.settings.heading != blank -%}
+              <h3 class="footer__heading">{{ block.settings.heading }}</h3>
+            {%- endif -%}
+            <div class="rte">{{ block.settings.text }}</div>
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+
+  <div class="page-width footer__bottom">
+    <span>© {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ 'footer.copyright' | t }}</span>
+    {%- if section.settings.show_payment_icons and shop.enabled_payment_types.size > 0 -%}
+      <ul class="footer__payments" aria-label="{{ 'footer.payment' | t }}">
+        {%- for type in shop.enabled_payment_types -%}
+          <li>{{ type | payment_type_svg_tag }}</li>
+        {%- endfor -%}
+      </ul>
+    {%- endif -%}
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Lábléc",
+  "class": "section-footer",
+  "enabled_on": { "groups": ["footer"] },
+  "max_blocks": 5,
+  "settings": [
+    { "type": "checkbox", "id": "show_payment_icons", "label": "Fizetési ikonok megjelenítése", "default": true }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Márka",
+      "limit": 1,
+      "settings": [
+        { "type": "richtext", "id": "text", "label": "Szöveg", "default": "<p>Minimalista stílus. Maximális hatás.</p>" },
+        { "type": "paragraph", "content": "A közösségi linkeket a Témabeállítások → Közösségi média alatt adhatod meg." }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menü",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Cím", "default": "Információ" },
+        { "type": "link_list", "id": "menu", "label": "Menü", "default": "footer" }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Szöveg",
+      "settings": [
+        { "type": "text", "id": "heading", "label": "Cím", "default": "Kapcsolat" },
+        { "type": "richtext", "id": "text", "label": "Szöveg", "default": "<p>[EMAIL CÍM]<br>[TELEFONSZÁM]<br>Ügyfélszolgálat: hétköznap 8–16h</p>" }
+      ]
+    }
+  ]
+}
+{% endschema %}

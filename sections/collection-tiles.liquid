@@ -1,0 +1,61 @@
+{%- if section.blocks.size > 0 -%}
+  <section class="section page-width" style="--pad-top: {{ section.settings.padding_top }}px; --pad-bottom: {{ section.settings.padding_bottom }}px;">
+    <div class="tiles" style="--tile-cols: {{ section.blocks.size }}; --tile-height: {{ section.settings.height }}px;">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign c = block.settings.collection
+          assign title = block.settings.title | default: c.title
+          assign image = block.settings.image | default: c.featured_image
+        -%}
+        <a href="{{ c.url | default: routes.all_products_collection_url }}" class="tile" {{ block.shopify_attributes }}>
+          <div class="tile__media">
+            {%- if image != blank -%}
+              {{ image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '500,800,1100,1400', sizes: '(min-width: 990px) 33vw, 100vw', alt: title }}
+            {%- else -%}
+              {{ 'collection-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </div>
+          <span class="tile__title">{{ title | default: 'Kategória' }}</span>
+          {%- if block.settings.cta != blank -%}
+            <span class="tile__cta">{{ block.settings.cta }} {% render 'icon', icon: 'arrow' %}</span>
+          {%- endif -%}
+        </a>
+      {%- endfor -%}
+    </div>
+  </section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Kategória csempék",
+  "class": "section-tiles",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "range", "id": "height", "label": "Csempék magassága", "min": 280, "max": 720, "step": 20, "unit": "px", "default": 460 },
+    { "type": "range", "id": "padding_top", "label": "Felső térköz", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 0 },
+    { "type": "range", "id": "padding_bottom", "label": "Alsó térköz", "min": 0, "max": 160, "step": 8, "unit": "px", "default": 96 }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Csempe",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Kollekció" },
+        { "type": "text", "id": "title", "label": "Cím", "info": "Ha üres, a kollekció neve jelenik meg." },
+        { "type": "image_picker", "id": "image", "label": "Kép", "info": "Ha üres, a kollekció képe jelenik meg." },
+        { "type": "text", "id": "cta", "label": "Link szövege", "default": "Vásárlás" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Kategória csempék",
+      "blocks": [
+        { "type": "tile", "settings": { "title": "Kapucnis pulóverek" } },
+        { "type": "tile", "settings": { "title": "Melegítőnadrágok" } },
+        { "type": "tile", "settings": { "title": "Teljes szettek" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

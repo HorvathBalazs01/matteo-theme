@@ -1,0 +1,43 @@
+{
+  "type": "footer",
+  "name": "Lábléc csoport",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "brand": {
+          "type": "brand",
+          "settings": {
+            "text": "<p>Minimalista stílus. Maximális hatás.</p>"
+          }
+        },
+        "shop": {
+          "type": "menu",
+          "settings": {
+            "heading": "Vásárlás",
+            "menu": "main-menu"
+          }
+        },
+        "info": {
+          "type": "menu",
+          "settings": {
+            "heading": "Információ",
+            "menu": "footer"
+          }
+        },
+        "contact": {
+          "type": "text",
+          "settings": {
+            "heading": "Kapcsolat",
+            "text": "<p>[EMAIL CÍM]<br>[TELEFONSZÁM]<br>[CÉGNÉV, SZÉKHELY]<br>Ügyfélszolgálat: hétköznap 8–16h</p>"
+          }
+        }
+      },
+      "block_order": ["brand", "shop", "info", "contact"],
+      "settings": {
+        "show_payment_icons": true
+      }
+    }
+  },
+  "order": ["footer"]
+}

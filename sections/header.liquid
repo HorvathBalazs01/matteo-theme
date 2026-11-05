@@ -1,0 +1,125 @@
+{%- liquid
+  assign wrapper_class = 'header-wrapper'
+  if section.settings.sticky
+    assign wrapper_class = wrapper_class | append: ' header-wrapper--sticky'
+  endif
+-%}
+<div class="{{ wrapper_class }}" data-header>
+  <header class="header">
+    <div class="header__side header__side--left">
+      <button type="button" class="icon-btn" data-drawer-open="menu-drawer" aria-controls="menu-drawer" aria-expanded="false" aria-label="{{ 'general.menu' | t }}">
+        {% render 'icon', icon: 'menu' %}
+      </button>
+      {%- if section.settings.menu_left != blank -%}
+        <nav class="header__nav" aria-label="{{ 'general.menu' | t }}">
+          {%- for link in section.settings.menu_left.links -%}
+            <a href="{{ link.url }}" class="header__link{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+    </div>
+
+    <a href="{{ routes.root_url }}" class="header__logo" aria-label="{{ shop.name | escape }}">
+      {% render 'logo', eager: true %}
+    </a>
+
+    <div class="header__side header__side--right">
+      {%- if section.settings.menu_right != blank -%}
+        <nav class="header__nav" aria-label="{{ 'general.menu' | t }} 2">
+          {%- for link in section.settings.menu_right.links -%}
+            <a href="{{ link.url }}" class="header__link{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
+          {%- endfor -%}
+        </nav>
+      {%- endif -%}
+      <div class="header__icons">
+        <a href="{{ routes.search_url }}" class="icon-btn" data-search-open aria-label="{{ 'general.search' | t }}">
+          {% render 'icon', icon: 'search' %}
+        </a>
+        {%- if shop.customer_accounts_enabled -%}
+          <a href="{{ routes.account_url }}" class="icon-btn header__account" aria-label="{{ 'general.account' | t }}">
+            {% render 'icon', icon: 'account' %}
+          </a>
+        {%- endif -%}
+        <a href="{{ routes.cart_url }}" class="icon-btn" data-cart-open aria-label="{{ 'general.cart' | t }}">
+          {% render 'icon', icon: 'cart' %}
+          <span class="cart-count" data-cart-count data-count="{{ cart.item_count }}" aria-hidden="true">{{ cart.item_count }}</span>
+        </a>
+      </div>
+    </div>
+  </header>
+</div>
+
+<div class="drawer drawer--left menu-drawer" id="menu-drawer" data-drawer aria-hidden="true">
+  <button type="button" class="drawer__overlay" data-drawer-close tabindex="-1" aria-label="{{ 'general.close' | t }}"></button>
+  <div class="drawer__panel" role="dialog" aria-modal="true" aria-label="{{ 'general.menu' | t }}">
+    <div class="drawer__head">
+      <span class="drawer__title">{{ 'general.menu' | t }}</span>
+      <button type="button" class="icon-btn" data-drawer-close aria-label="{{ 'general.close' | t }}">{% render 'icon', icon: 'close' %}</button>
+    </div>
+    <div class="drawer__body">
+      <nav class="menu-drawer__nav" aria-label="{{ 'general.menu' | t }}">
+        {%- for link in section.settings.menu_left.links -%}
+          <a href="{{ link.url }}" class="menu-drawer__link">{{ link.title }}</a>
+          {%- if link.links.size > 0 -%}
+            <div class="menu-drawer__sub">
+              {%- for child in link.links -%}<a href="{{ child.url }}">{{ child.title }}</a>{%- endfor -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- for link in section.settings.menu_right.links -%}
+          <a href="{{ link.url }}" class="menu-drawer__link">{{ link.title }}</a>
+          {%- if link.links.size > 0 -%}
+            <div class="menu-drawer__sub">
+              {%- for child in link.links -%}<a href="{{ child.url }}">{{ child.title }}</a>{%- endfor -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+        {%- if shop.customer_accounts_enabled -%}
+          <a href="{{ routes.account_url }}" class="menu-drawer__link">{{ 'general.account' | t }}</a>
+        {%- endif -%}
+      </nav>
+      {% render 'social-links', class: 'menu-drawer__social' %}
+    </div>
+  </div>
+</div>
+
+<div class="search-modal" id="search-modal" data-search-modal aria-hidden="true">
+  <div class="page-width">
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search-modal__form">
+      <label for="search-modal-input" class="visually-hidden">{{ 'search.placeholder' | t }}</label>
+      <input type="search" id="search-modal-input" name="q" class="search-modal__input" placeholder="{{ 'search.placeholder' | t }}" autocomplete="off" data-predictive-input>
+      <input type="hidden" name="options[prefix]" value="last">
+      <button type="submit" class="icon-btn" aria-label="{{ 'search.submit' | t }}">{% render 'icon', icon: 'search' %}</button>
+      <button type="button" class="icon-btn" data-search-close aria-label="{{ 'general.close' | t }}">{% render 'icon', icon: 'close' %}</button>
+    </form>
+    <div class="search-modal__results" data-predictive-results aria-live="polite"></div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Fejléc",
+  "class": "section-header",
+  "enabled_on": { "groups": ["header"] },
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu_left",
+      "label": "Bal oldali menü",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_right",
+      "label": "Jobb oldali menü",
+      "info": "Pl. GYIK, Kapcsolat. Hozz létre hozzá egy menüt: Online áruház → Navigáció."
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky",
+      "label": "Görgetéskor a fejléc maradjon felül",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

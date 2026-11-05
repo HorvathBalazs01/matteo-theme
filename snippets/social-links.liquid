@@ -1,0 +1,13 @@
+{%- if settings.social_instagram != blank or settings.social_tiktok != blank or settings.social_facebook != blank -%}
+  <div class="{{ class }}">
+    {%- if settings.social_instagram != blank -%}
+      <a href="{{ settings.social_instagram }}" class="icon-btn" target="_blank" rel="noopener" aria-label="Instagram">{% render 'icon', icon: 'instagram' %}</a>
+    {%- endif -%}
+    {%- if settings.social_tiktok != blank -%}
+      <a href="{{ settings.social_tiktok }}" class="icon-btn" target="_blank" rel="noopener" aria-label="TikTok">{% render 'icon', icon: 'tiktok' %}</a>
+    {%- endif -%}
+    {%- if settings.social_facebook != blank -%}
+      <a href="{{ settings.social_facebook }}" class="icon-btn" target="_blank" rel="noopener" aria-label="Facebook">{% render 'icon', icon: 'facebook' %}</a>
+    {%- endif -%}
+  </div>
+{%- endif -%}
