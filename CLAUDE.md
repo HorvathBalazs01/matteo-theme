@@ -101,6 +101,16 @@ assets/theme.js            drawer-ek, prediktív keresés, hero csúszka, válto
 - `product-recommendations` (Section Rendering API-val töltődik)
 - `main-cart` + `cart-drawer` (statikus szekció, `sections=cart-drawer` paraméterrel frissül)
 - `main-search`, `main-page`, `main-404`, `main-list-collections`, `main-password`
+- Oldalsablonok (az adminban az oldal „Téma sablon”-ja), a téma a **handle** alapján is megtalálja őket:
+  - `page.contact.json` → `main-contact` (elérhetőség blokkok + kapcsolatfelvételi űrlap), handle: `kapcsolat`
+  - `page.faq.json` → `main-faq` (csoportcím + kérdés blokkok, kérdésenként választható link), handle: `gyik`
+  - `page.size-chart.json` → `main-size-chart` (táblázat blokkok „|” elválasztással + szöveg), handle: `merettablazat`
+- Bekötések a handle-ök alapján: fejléc jobb menü (ha nincs menü kiválasztva: GYIK + Kapcsolat),
+  lábléc „Írj nekünk” link, GYIK alsó doboz, termékoldali „Mérettáblázat” link (becsúszó panel, a tartalmat
+  a theme.js tölti be az oldal `[data-size-chart]` eleméből).
+- Jogi oldalak = Shopify szabályzatok (Beállítások → Szabályzatok), a HTML-t a Shopify adja, mi csak stílusozzuk
+  (`.shopify-policy__*`). Linkjeik: lábléc alja (`shop.policies`), kapcsolat űrlap + hírlevél (adatvédelem),
+  kosár (szállítás), termékoldal „Szállítás és visszaküldés” lenyíló. Csak a kitöltött szabályzatok jelennek meg.
 
 **Snippetek:** `product-card`, `price`, `cart-item`, `shipping-bar`, `pagination`, `icon`, `logo`,
 `social-links`, `language-switcher`, `css-variables`, `fonts`, `meta-tags`
@@ -138,12 +148,17 @@ assets/theme.js            drawer-ek, prediktív keresés, hero csúszka, válto
 - `[ANYAGÖSSZETÉTEL, MOSÁSI ÚTMUTATÓ]` a termékoldalon (`product.json` → `care`)
 - A korábbi tervekben szereplő terméknevek („Signature / Essential hoodie”) csak példák voltak
 - Ideiglenes logó → vektoros SVG kell
+- Kapcsolat oldal (`page.contact.json`): `[EMAIL CÍM]`, `[TELEFONSZÁM]`, `[CÉGNÉV, SZÉKHELY]`
+- GYIK (`page.faq.json`): `[X]` munkanap, `[SZÁLLÍTÁSI MÓDOK]`, `[FIZETÉSI MÓDOK]`; a válaszok általánosak, át kell nézni
+- Mérettáblázat (`page.size-chart.json`): ideiglenes, általános európai férfi/unisex testméretek; a valódi termékméretekre cserélni
 
 ## Teendők / következő lépések
 
 - [ ] Bekötés és első teszt az élő fejlesztői boltban; hibák javítása
 - [ ] Menük beállítása (`main-menu` bal oldal; második menü a jobb oldalra: GYIK, Kapcsolat)
-- [ ] Hiányzó sablonok: `blog`, `article`, `gift_card`, GYIK oldal (pl. accordion szekció), Kapcsolat oldal (contact form), mérettáblázat oldal
+- [x] GYIK, Kapcsolat, Mérettáblázat oldalsablon; jogi oldalak stílusa
+- [ ] Az oldalak létrehozása az adminban (Kapcsolat, GYIK, Mérettáblázat) és a szabályzatok kitöltése
+- [ ] Hiányzó sablonok (csak ha kell): `blog`, `article`, `gift_card`
 - [ ] Valódi tartalom: termékek, fotók, árak, szövegek, logó
 - [ ] Fizetés, szállítás, számlázó app beállítása
 - [ ] Élesítés előtt: jogi oldalak, jelszóvédelem levétele, téma közzététele

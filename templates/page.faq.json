@@ -1,0 +1,114 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-faq",
+      "blocks": {
+        "h_order": {
+          "type": "heading",
+          "settings": { "heading": "Rendelés és szállítás" }
+        },
+        "q_delivery_time": {
+          "type": "question",
+          "settings": {
+            "question": "Mikor érkezik meg a rendelésem?",
+            "answer": "<p>A rendeléseket [X] munkanapon belül adjuk fel, a kiszállítás ezután általában 1–3 munkanap. A feladáskor e-mailben elküldjük a csomagkövetési számot.</p>",
+            "link": "shipping_policy"
+          }
+        },
+        "q_shipping_cost": {
+          "type": "question",
+          "settings": {
+            "question": "Mennyibe kerül a szállítás?",
+            "answer": "<p>30.000 Ft feletti rendelésnél ingyen szállítunk. Ez alatt a szállítási díjat a pénztárban, a választott szállítási mód alapján számoljuk ki.</p>",
+            "link": "none"
+          }
+        },
+        "q_shipping_methods": {
+          "type": "question",
+          "settings": {
+            "question": "Milyen szállítási módok közül választhatok?",
+            "answer": "<p>[SZÁLLÍTÁSI MÓDOK, pl. házhozszállítás futárral, csomagautomata]</p>",
+            "link": "none"
+          }
+        },
+        "q_change_order": {
+          "type": "question",
+          "settings": {
+            "question": "Módosíthatom vagy lemondhatom a rendelésemet?",
+            "answer": "<p>Amíg a csomagot nem adtuk fel, igen. Írj nekünk minél hamarabb, és add meg a rendelésszámodat.</p>",
+            "link": "contact"
+          }
+        },
+        "h_payment": {
+          "type": "heading",
+          "settings": { "heading": "Fizetés" }
+        },
+        "q_payment": {
+          "type": "question",
+          "settings": {
+            "question": "Hogyan fizethetek?",
+            "answer": "<p>[FIZETÉSI MÓDOK, pl. bankkártya, Apple Pay, Google Pay]. A fizetés biztonságos, titkosított fizetési oldalon történik.</p>",
+            "link": "none"
+          }
+        },
+        "h_returns": {
+          "type": "heading",
+          "settings": { "heading": "Visszaküldés és csere" }
+        },
+        "q_return": {
+          "type": "question",
+          "settings": {
+            "question": "Visszaküldhetem a terméket?",
+            "answer": "<p>Igen. A kézhezvételtől számított 14 napon belül indoklás nélkül elállhatsz a vásárlástól. A termék legyen viseletlen, címkével együtt.</p>",
+            "link": "refund_policy"
+          }
+        },
+        "q_exchange": {
+          "type": "question",
+          "settings": {
+            "question": "Kicserélhetem másik méretre?",
+            "answer": "<p>Igen. Írj nekünk a rendelésszámoddal és a kért mérettel, és segítünk a cserében.</p>",
+            "link": "contact"
+          }
+        },
+        "h_products": {
+          "type": "heading",
+          "settings": { "heading": "Méretek és termékek" }
+        },
+        "q_size": {
+          "type": "question",
+          "settings": {
+            "question": "Melyik méretet válasszam?",
+            "answer": "<p>Nézd meg a mérettáblázatot: a testméreteid alapján könnyen megtalálod a megfelelő méretet. Ha két méret között vagy, a lazább, streetwear szabáshoz válaszd a nagyobbat.</p>",
+            "link": "size_chart"
+          }
+        },
+        "q_care": {
+          "type": "question",
+          "settings": {
+            "question": "Hogyan mossam a melegítőmet?",
+            "answer": "<p>Kifordítva, 30 °C-on, hasonló színekkel mosd, és ne tedd szárítógépbe, így tovább megőrzi a formáját és a színét. A pontos útmutatót a termék címkéjén találod.</p>",
+            "link": "none"
+          }
+        }
+      },
+      "block_order": [
+        "h_order",
+        "q_delivery_time",
+        "q_shipping_cost",
+        "q_shipping_methods",
+        "q_change_order",
+        "h_payment",
+        "q_payment",
+        "h_returns",
+        "q_return",
+        "q_exchange",
+        "h_products",
+        "q_size",
+        "q_care"
+      ],
+      "settings": { "show_cta": true }
+    }
+  },
+  "order": ["main"]
+}

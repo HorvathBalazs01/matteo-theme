@@ -3,6 +3,15 @@
   if section.settings.sticky
     assign wrapper_class = wrapper_class | append: ' header-wrapper--sticky'
   endif
+
+  comment
+    Jobb oldali menü: ha nincs kiválasztva, automatikusan a GYIK és a Kapcsolat oldal
+    (a „gyik” és „kapcsolat” címkéjű oldalak, ha léteznek).
+  endcomment
+  if section.settings.menu_right == blank
+    assign faq_page = pages['gyik']
+    assign contact_page = pages['kapcsolat']
+  endif
 -%}
 <div class="{{ wrapper_class }}" data-header>
   <header class="header">
@@ -29,6 +38,15 @@
           {%- for link in section.settings.menu_right.links -%}
             <a href="{{ link.url }}" class="header__link{% if link.active %} is-active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title }}</a>
           {%- endfor -%}
+        </nav>
+      {%- elsif faq_page != blank or contact_page != blank -%}
+        <nav class="header__nav" aria-label="{{ 'general.menu' | t }} 2">
+          {%- if faq_page != blank -%}
+            <a href="{{ faq_page.url }}" class="header__link{% if page.id == faq_page.id %} is-active{% endif %}"{% if page.id == faq_page.id %} aria-current="page"{% endif %}>{{ faq_page.title }}</a>
+          {%- endif -%}
+          {%- if contact_page != blank -%}
+            <a href="{{ contact_page.url }}" class="header__link{% if page.id == contact_page.id %} is-active{% endif %}"{% if page.id == contact_page.id %} aria-current="page"{% endif %}>{{ contact_page.title }}</a>
+          {%- endif -%}
         </nav>
       {%- endif -%}
       {% render 'language-switcher', class: 'header__lang' %}
@@ -75,6 +93,10 @@
             </div>
           {%- endif -%}
         {%- endfor -%}
+        {%- if section.settings.menu_right == blank -%}
+          {%- if faq_page != blank -%}<a href="{{ faq_page.url }}" class="menu-drawer__link">{{ faq_page.title }}</a>{%- endif -%}
+          {%- if contact_page != blank -%}<a href="{{ contact_page.url }}" class="menu-drawer__link">{{ contact_page.title }}</a>{%- endif -%}
+        {%- endif -%}
         {%- if shop.customer_accounts_enabled -%}
           <a href="{{ routes.account_url }}" class="menu-drawer__link">{{ 'general.account' | t }}</a>
         {%- endif -%}
@@ -114,7 +136,7 @@
       "type": "link_list",
       "id": "menu_right",
       "label": "Jobb oldali menü",
-      "info": "Pl. GYIK, Kapcsolat. Hozz létre hozzá egy menüt: Online áruház → Navigáció."
+      "info": "Pl. GYIK, Kapcsolat. Hozz létre hozzá egy menüt: Online áruház → Navigáció. Ha üres, automatikusan a „gyik” és „kapcsolat” címkéjű (handle) oldal jelenik meg."
     },
     {
       "type": "checkbox",

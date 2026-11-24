@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-contact",
+      "blocks": {
+        "email": {
+          "type": "info",
+          "settings": { "heading": "E-mail", "text": "<p>[EMAIL CÍM]</p>" }
+        },
+        "phone": {
+          "type": "info",
+          "settings": { "heading": "Telefon", "text": "<p>[TELEFONSZÁM]</p>" }
+        },
+        "hours": {
+          "type": "info",
+          "settings": { "heading": "Ügyfélszolgálat", "text": "<p>Hétköznap 8–16 óra között</p>" }
+        },
+        "company": {
+          "type": "info",
+          "settings": { "heading": "Cégadatok", "text": "<p>[CÉGNÉV, SZÉKHELY]</p>" }
+        }
+      },
+      "block_order": ["email", "phone", "hours", "company"],
+      "settings": { "show_social": true }
+    }
+  },
+  "order": ["main"]
+}

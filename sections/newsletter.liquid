@@ -14,6 +14,9 @@
         <input id="{{ form_id }}-email" type="email" name="contact[email]" class="field" placeholder="{{ 'newsletter.placeholder' | t }}" autocomplete="email" required>
         <button type="submit" class="btn btn--solid">{{ 'newsletter.subscribe' | t }}</button>
       </div>
+      {%- if shop.privacy_policy != blank -%}
+        <p class="form-note newsletter__note">{{ 'newsletter.privacy_html' | t: link: shop.privacy_policy.url }}</p>
+      {%- endif -%}
       {%- if form.posted_successfully? -%}
         <p class="newsletter__msg" role="status">{{ 'newsletter.success' | t }}</p>
       {%- elsif form.errors -%}

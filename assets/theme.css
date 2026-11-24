@@ -720,6 +720,7 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .newsletter__row .field { border: 0; flex: 1 1 auto; min-width: 0; }
 .newsletter__row .btn { border: 0; flex: 0 0 auto; }
 .newsletter__msg { margin-top: 14px; font-size: 13px; color: var(--color-text-soft); }
+.newsletter__note { margin-top: 14px; }
 @media (max-width: 480px) {
   .newsletter__row { flex-direction: column; }
   .newsletter__row .field { border-bottom: 1px solid var(--color-line-strong); }
@@ -758,6 +759,10 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
   color: var(--color-muted);
 }
 .footer__payments { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.footer__policies { display: flex; flex-wrap: wrap; column-gap: 20px; list-style: none; margin: 0; padding: 0; }
+.footer__policies a { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-muted); }
+.footer__policies a:hover { color: var(--color-text); }
+.footer__col .footer__cta { align-self: flex-start; margin-top: 6px; color: var(--color-text); }
 .footer__payments svg { width: 38px; height: 24px; }
 
 .footer__accordion summary { list-style: none; }
@@ -1077,6 +1082,7 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .cart-row { display: flex; justify-content: space-between; gap: 16px; font-family: var(--font-display); font-size: 12px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; }
 .cart-row--total { font-size: 14px; font-weight: 600; }
 .cart-note { font-size: 12px; color: var(--color-muted); line-height: 1.6; }
+.cart-note a { color: var(--color-text-soft); text-decoration: underline; text-underline-offset: 3px; }
 
 .shipping-bar { display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: var(--color-text-soft); }
 .shipping-bar__track { height: 2px; background: var(--color-line); }
@@ -1099,7 +1105,153 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
    -------------------------------------------------------------------------- */
 
 .page { max-width: 760px; margin: 0 auto; padding-top: 72px; padding-bottom: 110px; }
+.page--wide { max-width: 1100px; }
 .page__title { font-size: clamp(24px, 3vw, 34px); margin-bottom: 40px; text-align: center; }
+.page__intro { max-width: 640px; margin: -16px auto 56px; text-align: center; }
+
+@media (max-width: 749px) {
+  .page { padding-top: 48px; padding-bottom: 72px; }
+  .page__title { margin-bottom: 28px; }
+  .page__intro { margin: -8px auto 40px; }
+}
+
+/* Hosszabb szövegek (oldalak, szabályzatok) címsorai */
+.rte h2,
+.rte h3 {
+  margin: 2em 0 .8em;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  line-height: 1.5;
+}
+.rte h2 { font-size: 14px; }
+.rte h3 { font-size: 12px; }
+.rte > :first-child { margin-top: 0; }
+.rte strong { color: var(--color-text); font-weight: 500; }
+
+/* Űrlapok (kapcsolat) */
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 16px; }
+.form-field { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.form-field--full { grid-column: 1 / -1; }
+.form-label { font-family: var(--font-display); font-size: 11px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; }
+.form-label__optional { color: var(--color-muted); letter-spacing: .1em; text-transform: none; }
+.form-note { font-size: 12px; color: var(--color-muted); line-height: 1.6; }
+.form-note a { color: var(--color-text-soft); text-decoration: underline; text-underline-offset: 3px; }
+.form-message { padding: 16px 18px; margin-bottom: 24px; border: 1px solid var(--color-line-strong); font-size: 14px; color: var(--color-text-soft); }
+.form-message--success { border-color: var(--color-text); color: var(--color-text); }
+.form-message ul { margin: 0; padding-left: 1.2em; }
+@media (max-width: 749px) { .form-grid { grid-template-columns: 1fr; } }
+
+/* Kapcsolat oldal */
+.contact { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr); gap: 72px; align-items: start; }
+.contact__info { display: flex; flex-direction: column; gap: 28px; padding-top: 4px; }
+.contact__item { display: flex; flex-direction: column; gap: 8px; padding-bottom: 24px; border-bottom: 1px solid var(--color-line); }
+.contact__label { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
+.contact__social { display: flex; gap: 4px; margin-left: -12px; }
+.contact__form { display: flex; flex-direction: column; gap: 24px; }
+.contact__submit { align-self: flex-start; }
+.contact--form-only { grid-template-columns: minmax(0, 760px); justify-content: center; }
+@media (max-width: 989px) { .contact { grid-template-columns: 1fr; gap: 48px; } }
+@media (max-width: 749px) { .contact__submit { align-self: stretch; } }
+
+/* GYIK oldal */
+.faq__group { margin: 56px 0 8px; }
+.faq__group:first-child { margin-top: 0; }
+.faq .accordion summary { gap: 16px; text-align: left; line-height: 1.5; padding: 16px 0; }
+.faq .accordion summary .icon { flex: 0 0 auto; }
+.faq__link { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; }
+.faq__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 72px;
+  padding: 48px 24px;
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+}
+.faq__cta-title { font-size: 18px; }
+.faq__cta-text { color: var(--color-text-soft); font-size: 14px; margin-bottom: 8px; }
+
+/* Mérettáblázat (oldal és termékoldali panel) */
+.size-chart { display: flex; flex-direction: column; gap: 56px; }
+.size-chart__block { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.size-chart__note { font-size: 12px; color: var(--color-muted); }
+.size-table__wrap { overflow-x: auto; border: 1px solid var(--color-line); -webkit-overflow-scrolling: touch; }
+.size-table { width: 100%; border-collapse: collapse; font-size: 14px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.size-table th,
+.size-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--color-line); }
+.size-table tbody tr:last-child > * { border-bottom: 0; }
+.size-table thead th { background: var(--color-surface); font-family: var(--font-display); font-size: 10px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; }
+.size-table tbody th { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: .12em; }
+.size-table td { color: var(--color-text-soft); }
+.size-table tbody tr:hover > * { background: var(--color-surface); }
+
+.size-drawer .drawer__panel { width: min(560px, 100%); }
+.size-drawer .drawer__body { padding-top: 28px; }
+.size-drawer .size-chart { gap: 40px; }
+.size-drawer .size-table { font-size: 13px; }
+.size-drawer .size-table th,
+.size-drawer .size-table td { padding: 12px 14px; }
+.size-drawer__loading { color: var(--color-muted); font-size: 13px; }
+@media (max-width: 480px) { .size-drawer .drawer__body { padding-left: 16px; padding-right: 16px; } }
+
+.option__size-link {
+  flex: 0 0 auto;
+  padding: 14px 0;
+  margin: -14px 0;
+  color: var(--color-text-soft);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.option__size-link:hover { color: var(--color-text); }
+.option__size-fallback { font-family: var(--font-display); font-size: 11px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; padding-top: 4px; }
+
+/* Szabályzat linkek a termékoldali lenyílóban */
+.policy-links { display: flex; flex-wrap: wrap; gap: 8px 24px; list-style: none; margin: 16px 0 0; padding: 0; }
+
+/* Shopify jogi oldalak (Beállítások → Szabályzatok) és a spamszűrő oldal: a Shopify generálja a HTML-t */
+.main .shopify-policy__container,
+.main .shopify-challenge__container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 72px var(--gutter) 110px;
+}
+.main .shopify-policy__title { text-align: center; margin-bottom: 40px; }
+.main .shopify-policy__title h1,
+.main .shopify-challenge__container h1 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 300;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+.main .shopify-policy__body { color: var(--color-text-soft); line-height: 1.75; }
+.main .shopify-policy__body p + p { margin-top: 1em; }
+.main .shopify-policy__body a { text-decoration: underline; text-underline-offset: 3px; }
+.main .shopify-challenge__container { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+.main .shopify-challenge__message { color: var(--color-text-soft); }
+.main .shopify-challenge__button {
+  min-height: 52px;
+  padding: 0 28px;
+  border: 1px solid var(--color-text);
+  background: var(--color-text);
+  color: var(--color-bg);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+@media (max-width: 749px) {
+  .main .shopify-policy__container,
+  .main .shopify-challenge__container { padding-top: 48px; padding-bottom: 72px; }
+}
 
 .search-page { padding-top: 56px; padding-bottom: 110px; }
 .search-page__form { display: flex; gap: 0; max-width: 640px; margin: 0 auto 48px; border: 1px solid var(--color-line-strong); }

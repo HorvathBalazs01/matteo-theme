@@ -1,0 +1,44 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-size-chart",
+      "blocks": {
+        "tops": {
+          "type": "table",
+          "settings": {
+            "heading": "Felsők – pulóver",
+            "columns": "Méret | EU | Mellbőség (cm) | Derékbőség (cm)",
+            "rows": "XS | 42 | 84–87 | 72–75\nS | 44–46 | 88–95 | 76–83\nM | 48–50 | 96–103 | 84–91\nL | 52–54 | 104–111 | 92–99\nXL | 56–58 | 112–119 | 100–107\nXXL | 60–62 | 120–127 | 108–115",
+            "note": "Testméretek centiméterben, nem a ruhadarab saját méretei."
+          }
+        },
+        "bottoms": {
+          "type": "table",
+          "settings": {
+            "heading": "Alsók – melegítőnadrág",
+            "columns": "Méret | EU | Derékbőség (cm) | Csípőbőség (cm)",
+            "rows": "XS | 42 | 72–75 | 88–91\nS | 44–46 | 76–83 | 92–99\nM | 48–50 | 84–91 | 100–107\nL | 52–54 | 92–99 | 108–115\nXL | 56–58 | 100–107 | 116–123\nXXL | 60–62 | 108–115 | 124–131",
+            "note": "Testméretek centiméterben, nem a ruhadarab saját méretei."
+          }
+        },
+        "measure": {
+          "type": "text",
+          "settings": {
+            "heading": "Hogyan mérj?",
+            "text": "<p><strong>Mellbőség:</strong> a mellkas legszélesebb részén, a hónalj alatt, vízszintesen körbemérve.</p><p><strong>Derékbőség:</strong> a derék legkeskenyebb pontján, a köldök fölött, lazán körbemérve.</p><p><strong>Csípőbőség:</strong> a csípő legszélesebb részén, összezárt lábbal körbemérve.</p>"
+          }
+        },
+        "fit": {
+          "type": "text",
+          "settings": {
+            "heading": "Melyik méretet válasszam?",
+            "text": "<p>Ha két méret között vagy, a lazább, streetwear szabáshoz válaszd a nagyobbat, testhezállóbb viselethez a kisebbet. Bizonytalan vagy? Írj nekünk, és segítünk.</p>"
+          }
+        }
+      },
+      "block_order": ["tops", "bottoms", "measure", "fit"],
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

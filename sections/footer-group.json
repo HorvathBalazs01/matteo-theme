@@ -29,7 +29,8 @@
           "type": "text",
           "settings": {
             "heading": "Kapcsolat",
-            "text": "<p>[EMAIL CÍM]<br>[TELEFONSZÁM]<br>[CÉGNÉV, SZÉKHELY]<br>Ügyfélszolgálat: hétköznap 8–16h</p>"
+            "text": "<p>[EMAIL CÍM]<br>[TELEFONSZÁM]<br>[CÉGNÉV, SZÉKHELY]<br>Ügyfélszolgálat: hétköznap 8–16h</p>",
+            "contact_link": true
           }
         }
       },

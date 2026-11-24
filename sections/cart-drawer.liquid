@@ -18,7 +18,7 @@
           <span>{{ 'cart.subtotal' | t }}</span>
           <span>{{ cart.total_price | money }}</span>
         </div>
-        <p class="cart-note">{{ 'cart.taxes' | t }}</p>
+        <p class="cart-note">{%- if shop.shipping_policy != blank -%}{{ 'cart.taxes_shipping_policy_html' | t: link: shop.shipping_policy.url }}{%- else -%}{{ 'cart.taxes' | t }}{%- endif -%}</p>
         <form action="{{ routes.cart_url }}" method="post">
           <button type="submit" name="checkout" class="btn btn--solid btn--full">{{ 'cart.checkout' | t }}</button>
         </form>

@@ -15,7 +15,8 @@
     "next_slide": "Next slide",
     "go_to_slide": "Go to slide {{ number }}",
     "language": "Language",
-    "breadcrumb": "Breadcrumb"
+    "breadcrumb": "Breadcrumb",
+    "loading": "Loading…"
   },
   "products": {
     "from": "From {{ price }}",
@@ -31,7 +32,8 @@
     "increase": "Increase quantity",
     "placeholder_title": "Product name",
     "recommendations": "You may also like",
-    "as_set": "Complete the set"
+    "as_set": "Complete the set",
+    "size_chart": "Size chart"
   },
   "cart": {
     "title": "Cart",
@@ -46,7 +48,8 @@
     "free_shipping_remaining": "Spend {{ amount }} more for free shipping.",
     "view_cart": "View cart",
     "product": "Product",
-    "total": "Total"
+    "total": "Total",
+    "taxes_shipping_policy_html": "Prices include VAT. <a href=\"{{ link }}\">Shipping</a> is calculated at checkout."
   },
   "collections": {
     "products_count": {
@@ -75,7 +78,8 @@
     "email": "Email address",
     "placeholder": "Your email address",
     "subscribe": "Subscribe",
-    "success": "Thanks for subscribing!"
+    "success": "Thanks for subscribing!",
+    "privacy_html": "You can unsubscribe at any time. We handle your data in line with our <a href=\"{{ link }}\">privacy policy</a>."
   },
   "pagination": {
     "label": "Pagination",
@@ -95,8 +99,25 @@
     "admin": "Are you the store owner?",
     "admin_link": "Log in here"
   },
+  "contact": {
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone number",
+    "order": "Order number",
+    "optional": "(optional)",
+    "message": "Message",
+    "send": "Send message",
+    "success": "Thanks, we have received your message! We will get back to you soon.",
+    "privacy_html": "We handle your data in line with our <a href=\"{{ link }}\">privacy policy</a>.",
+    "write_us": "Contact us"
+  },
+  "faq": {
+    "cta_heading": "Can’t find your answer?",
+    "cta_text": "Send us a message and we will get back to you soon."
+  },
   "footer": {
     "copyright": "All rights reserved.",
-    "payment": "Payment methods"
+    "payment": "Payment methods",
+    "policies": "Legal"
   }
 }

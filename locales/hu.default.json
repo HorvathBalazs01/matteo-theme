@@ -15,7 +15,8 @@
     "next_slide": "Következő dia",
     "go_to_slide": "Ugrás a(z) {{ number }}. diára",
     "language": "Nyelv",
-    "breadcrumb": "Morzsamenü"
+    "breadcrumb": "Morzsamenü",
+    "loading": "Betöltés…"
   },
   "products": {
     "from": "{{ price }}-tól",
@@ -31,7 +32,8 @@
     "increase": "Mennyiség növelése",
     "placeholder_title": "Termék neve",
     "recommendations": "Ezeket is ajánljuk",
-    "as_set": "Szettként"
+    "as_set": "Szettként",
+    "size_chart": "Mérettáblázat"
   },
   "cart": {
     "title": "Kosár",
@@ -46,7 +48,8 @@
     "free_shipping_remaining": "Még {{ amount }} és ingyen szállítunk.",
     "view_cart": "Kosár megtekintése",
     "product": "Termék",
-    "total": "Összesen"
+    "total": "Összesen",
+    "taxes_shipping_policy_html": "Az árak tartalmazzák az ÁFA-t. A <a href=\"{{ link }}\">szállítási díjat</a> a pénztárban számoljuk."
   },
   "collections": {
     "products_count": {
@@ -75,7 +78,8 @@
     "email": "E-mail cím",
     "placeholder": "E-mail címed",
     "subscribe": "Feliratkozás",
-    "success": "Köszönjük, feliratkoztál!"
+    "success": "Köszönjük, feliratkoztál!",
+    "privacy_html": "Bármikor leiratkozhatsz. Az adataidat az <a href=\"{{ link }}\">adatvédelmi tájékoztatónk</a> szerint kezeljük."
   },
   "pagination": {
     "label": "Lapozás",
@@ -95,8 +99,25 @@
     "admin": "Tulajdonos vagy?",
     "admin_link": "Belépés ide"
   },
+  "contact": {
+    "name": "Név",
+    "email": "E-mail cím",
+    "phone": "Telefonszám",
+    "order": "Rendelésszám",
+    "optional": "(nem kötelező)",
+    "message": "Üzenet",
+    "send": "Üzenet küldése",
+    "success": "Köszönjük, megkaptuk az üzenetedet! Hamarosan válaszolunk.",
+    "privacy_html": "Az adataidat az <a href=\"{{ link }}\">adatvédelmi tájékoztatónk</a> szerint kezeljük.",
+    "write_us": "Írj nekünk"
+  },
+  "faq": {
+    "cta_heading": "Nem találod a választ?",
+    "cta_text": "Írj nekünk, és hamarosan válaszolunk."
+  },
   "footer": {
     "copyright": "Minden jog fenntartva.",
-    "payment": "Fizetési módok"
+    "payment": "Fizetési módok",
+    "policies": "Jogi információk"
   }
 }

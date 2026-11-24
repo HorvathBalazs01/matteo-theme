@@ -69,6 +69,36 @@
   });
 
   /* ------------------------------------------------------------------------
+     Mérettáblázat panel (termékoldal)
+     A panelt a fenti általános drawer-kezelő nyitja; itt csak a tartalmát
+     töltjük be egyszer a mérettáblázat oldalról. Hiba esetén megnyitjuk az oldalt.
+     ------------------------------------------------------------------------ */
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('[data-size-chart-url]');
+    if (!link) return;
+    const drawer = document.getElementById(link.dataset.drawerOpen);
+    const target = drawer && $('[data-size-chart-content]', drawer);
+    if (!target || target.dataset.loaded) return;
+    target.dataset.loaded = 'true';
+
+    fetch(link.dataset.sizeChartUrl)
+      .then((res) => {
+        if (!res.ok) throw new Error(res.status);
+        return res.text();
+      })
+      .then((html) => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const chart = $('[data-size-chart]', doc);
+        if (!chart) throw new Error('size chart not found');
+        target.innerHTML = chart.innerHTML;
+      })
+      .catch(() => {
+        window.location.href = link.href;
+      });
+  });
+
+  /* ------------------------------------------------------------------------
      Keresés (prediktív)
      ------------------------------------------------------------------------ */
 
