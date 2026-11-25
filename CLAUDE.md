@@ -24,7 +24,10 @@ Ez a fájl a projekt háttere és szabályai, minden munkamenet elején olvasd e
   - A JSON sablonokban és a `settings_data.json`-ban lehetnek a szerkesztőben beállított értékek
     (kiválasztott kollekciók, képek, szövegek). Ezeket ne írd felül vakon, csak célzottan módosíts.
 - Ajánlott: nagyobb változtatásokhoz `dev` branch egy második, nem közzétett témához; ha jó, merge a `main`-be.
-- Helyi előnézet: `shopify theme dev --store <bolt>.myshopify.com`
+- A bolt: `g0eisa-7w.myshopify.com` (admin: `admin.shopify.com/store/g0eisa-7w`).
+- Helyi előnézet push nélkül: `shopify theme dev --store g0eisa-7w.myshopify.com` → `http://127.0.0.1:9292`,
+  mentéskor magától frissül. Rejtett fejlesztői témát használ, az élő témát és a GitHubot nem érinti.
+  Első futtatáskor böngészős bejelentkezés + a bolt jelszava kell (ezt Balázsnak kell megcsinálnia).
 - **Commit előtt futtasd: `shopify theme check`.** Jelenleg 0 hiba, 0 figyelmeztetés – így is maradjon.
 - Élő bolton a kódot eddig nem teszteltük; hibánál Balázs képernyőképet küld.
 
@@ -102,7 +105,7 @@ assets/theme.js            drawer-ek, prediktív keresés, hero csúszka, válto
     (x = a további képek száma). Bármelyik képre kattintva **lightbox** nyílik az adott képtől (nyilak, ← → Esc,
     ujjal húzás). A kiválasztott változat saját képe kerül előre. Jobbra a blokkok **a Kosárba gombig** (vele együtt).
   - **Alul teljes szélességben** (`.product__more`): a Kosárba gomb **utáni** blokkok – a `product.json` sorrendje
-    dönti el, mi hova kerül (most: description, perks, details, care, shipping).
+    dönti el, mi hova kerül (most: perks, description, details, care, shipping).
   - Blokkok: title, price, variant_picker (alapból egy sorban gombok, elfogyott méret áthúzva; „lista” megjelenés is
     választható; „Már csak X db” sor csak alacsony készletnél; Mérettáblázat link), buy_buttons (Kosárba +
     „Szettként”), description (látható vagy lenyíló), perks, details (`snippets/product-details.liquid`: kategória-

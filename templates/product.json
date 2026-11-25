@@ -13,7 +13,7 @@
         "care": { "type": "collapsible", "settings": { "heading": "Ápolás", "content": "<p>Kifordítva, 30 °C-on, hasonló színekkel mosd. Ne tedd szárítógépbe, és ne vasald közvetlenül a mintát. A pontos útmutatót a termék címkéjén találod.</p>" } },
         "shipping": { "type": "collapsible", "settings": { "heading": "Szállítás és visszaküldés", "content": "<p>Ingyenes szállítás 30.000 Ft feletti rendelés esetén. 14 napon belül indoklás nélkül visszaküldheted a terméket.</p>", "show_policy_links": true } }
       },
-      "block_order": ["title", "price", "variants", "buy", "description", "perks", "details", "care", "shipping"],
+      "block_order": ["title", "price", "variants", "buy", "perks", "description", "details", "care", "shipping"],
       "settings": {}
     },
     "recommendations": {
