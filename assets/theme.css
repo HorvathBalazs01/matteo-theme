@@ -945,7 +945,7 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .product__media .placeholder-svg { width: 100%; height: 100%; object-fit: cover; }
 
 .product__info {
-  flex: 1 1 380px;
+  flex: 1 1 420px;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -953,6 +953,11 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
   position: sticky;
   top: 24px;
 }
+/* Ha a jobb oszlop magasabb a képernyőnél, ne ragadjon (theme.js: initStickyInfo) */
+.product__info.is-tall { position: static; }
+
+.product__label { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
+.product__description .rte { font-size: 15px; }
 .product__block { display: flex; flex-direction: column; gap: 12px; }
 .product__eyebrow { font-family: var(--font-display); font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--color-muted); }
 .product__title { font-size: 28px; letter-spacing: .18em; }
@@ -992,6 +997,70 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .option__value--swatch label { min-width: 0; width: 44px; height: 44px; padding: 4px; }
 .option__value--swatch input:checked + label { background: transparent; border-color: var(--color-text); }
 .option__value--swatch .swatch { display: block; width: 100%; height: 100%; border: 1px solid #262626; }
+
+.product__variants { gap: 20px; }
+
+/* Lista megjelenés: soronként egy érték, jelölőnégyzettel és készletinfóval.
+   Valójában rádiógombok – egyszerre csak egy választható. */
+.option--list .option__values { flex-direction: column; gap: 0; border-top: 1px solid var(--color-line); }
+.option--list .option__value label {
+  display: flex;
+  justify-content: flex-start;
+  gap: 16px;
+  width: 100%;
+  height: auto;
+  min-height: 52px;
+  padding: 0 12px;
+  border: 0;
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+}
+.option--list .option__value label:hover { background: var(--color-surface); }
+.option--list .option__value input:checked + label { background: var(--color-surface); color: var(--color-text); }
+.option--list .option__value input:focus-visible + label { outline-offset: -1px; }
+.option__check { position: relative; flex: 0 0 auto; width: 18px; height: 18px; border: 1px solid var(--color-line-strong); }
+.option--list .option__value input:checked + label .option__check { background: var(--color-text); border-color: var(--color-text); }
+.option--list .option__value input:checked + label .option__check::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 6px;
+  height: 11px;
+  border: solid var(--color-bg);
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+.option__name { flex: 1 1 auto; }
+.option__status { font-family: var(--font-body); font-size: 12px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--color-muted); }
+.option__status--out { display: none; }
+.option--list .option__value.is-unavailable label { color: var(--color-muted); border-style: solid; text-decoration: none; }
+.option--list .option__value.is-unavailable input:checked + label { color: var(--color-muted); }
+.option--list .is-unavailable .option__name { text-decoration: line-through; }
+.option--list .is-unavailable .option__status--in { display: none; }
+.option--list .is-unavailable .option__status--out { display: inline; }
+
+/* Készletjelzés a kiválasztott változathoz */
+.product__stock { font-size: 13px; color: var(--color-text-soft); }
+.stock { display: inline-flex; align-items: center; gap: 10px; }
+.stock::before { content: ""; width: 7px; height: 7px; background: var(--color-text); }
+.stock--low::before { background: transparent; border: 1px solid var(--color-text); }
+.stock--out { color: var(--color-muted); }
+.stock--out::before { background: var(--color-line-strong); }
+
+/* Termék részletei */
+.details { margin: 0; border-top: 1px solid var(--color-line); }
+.details__row {
+  display: grid;
+  grid-template-columns: minmax(110px, 38%) minmax(0, 1fr);
+  gap: 16px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--color-line);
+  font-size: 14px;
+}
+.details__row:empty { display: none; }
+.details dt { padding-top: 2px; font-family: var(--font-display); font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--color-muted); }
+.details dd { margin: 0; color: var(--color-text-soft); overflow-wrap: anywhere; }
 
 .product__buttons { display: flex; flex-direction: column; gap: 10px; }
 .product__buttons .btn { min-height: 56px; font-size: 12px; letter-spacing: .22em; }

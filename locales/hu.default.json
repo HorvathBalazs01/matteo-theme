@@ -33,7 +33,32 @@
     "placeholder_title": "Termék neve",
     "recommendations": "Ezeket is ajánljuk",
     "as_set": "Szettként",
-    "size_chart": "Mérettáblázat"
+    "size_chart": "Mérettáblázat",
+    "in_stock": "Raktáron",
+    "low_stock": "Már csak {{ count }} db van raktáron",
+    "category": "Kategória",
+    "type": "Típus",
+    "vendor": "Márka",
+    "weight": "Súly",
+    "sku": "Cikkszám",
+    "details": {
+      "fabric": "Anyag",
+      "material": "Anyag",
+      "color_pattern": "Szín",
+      "size": "Méret",
+      "target_gender": "Nem",
+      "age_group": "Korcsoport",
+      "fit": "Szabás",
+      "sleeve_length_type": "Ujjhossz",
+      "neckline": "Nyakkivágás",
+      "top_length_type": "Hossz",
+      "pants_length_type": "Szárhossz",
+      "waist_rise": "Derékmagasság",
+      "closure_type": "Záródás",
+      "clothing_features": "Jellemzők",
+      "activity": "Sportág",
+      "care_instructions": "Ápolás"
+    }
   },
   "cart": {
     "title": "Kosár",

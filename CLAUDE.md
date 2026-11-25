@@ -96,8 +96,16 @@ assets/theme.js            drawer-ek, prediktív keresés, hero csúszka, válto
   `trust-bar` (4 előny), `featured-collection` (Legnépszerűbb termékeink), `collection-tiles` (kategória csempék),
   `about` (Rólunk, `id="rolunk"`), `newsletter` (customer form, `newsletter` tag)
 - `main-collection`: fejléc sáv, gyorslinkek (menüből), szűrők (`collection.filters`), rendezés, lapozás
-- `main-product`: galéria, blokkok: title, price, variant_picker (radio, swatch, elfogyott áthúzva),
-  buy_buttons (Kosárba + „Szettként” párosított termék), perks, description, collapsible, text, @app
+- `main-product`: bal oldalt galéria, jobb oldalt blokkok (sorrend a `product.json`-ban): title, price,
+  variant_picker (rádiógombok; megjelenés: lista jelölőnégyzettel + soronkénti készlet / gombok; swatch; elfogyott áthúzva;
+  „Raktáron / Már csak X db / Elfogyott” sor; Mérettáblázat link), description (mindig látható vagy lenyíló),
+  buy_buttons (Kosárba + „Szettként” párosított termék), perks, details („Termék részletei”: a kategória-metamezők
+  `product.metafields.shopify[...]` – anyag, szín, nem, ujjhossz stb. –, kategória, cikkszám, + 4 saját sor
+  dinamikus forráshoz), collapsible (üresen nem jelenik meg), text, @app.
+  - Változatváltáskor a JS a Section Rendering API-val frissít minden `[data-dynamic="…"]` elemet (ár, készlet, cikkszám).
+  - A méretválasztóhoz a terméknek **változatok** kellenek (Változatok → Méret). A kategória „Méret” mezője csak
+    a részletek közé kerül, nem választható.
+  - A jobb oszlop sticky, de ha magasabb a képernyőnél, `.is-tall` → static (theme.js `initStickyInfo`).
 - `product-recommendations` (Section Rendering API-val töltődik)
 - `main-cart` + `cart-drawer` (statikus szekció, `sections=cart-drawer` paraméterrel frissül)
 - `main-search`, `main-page`, `main-404`, `main-list-collections`, `main-password`
@@ -145,7 +153,7 @@ assets/theme.js            drawer-ek, prediktív keresés, hero csúszka, válto
 - `[EMAIL CÍM]`, `[TELEFONSZÁM]`, `[CÉGNÉV, SZÉKHELY]` a footerben (`footer-group.json`)
 - Rólunk szöveg és kép (`index.json` → `about`), aláírás
 - Hero képek; a 2. és 3. dia szlogenje kitalált („Az új szett. Most érkezett.”, „Fekete. Fehér. Matteo.”)
-- `[ANYAGÖSSZETÉTEL, MOSÁSI ÚTMUTATÓ]` a termékoldalon (`product.json` → `care`)
+- Általános ápolási szöveg a termékoldalon (`product.json` → `care`), a valódi mosási útmutatóval egyeztetni
 - A korábbi tervekben szereplő terméknevek („Signature / Essential hoodie”) csak példák voltak
 - Ideiglenes logó → vektoros SVG kell
 - Kapcsolat oldal (`page.contact.json`): `[EMAIL CÍM]`, `[TELEFONSZÁM]`, `[CÉGNÉV, SZÉKHELY]`

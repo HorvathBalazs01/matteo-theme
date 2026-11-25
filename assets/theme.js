@@ -254,8 +254,20 @@
      Termékoldal – változatválasztó
      ------------------------------------------------------------------------ */
 
+  // A jobb oszlop csak akkor „ragad” görgetéskor, ha kifér a képernyőre (különben az alja elérhetetlen lenne)
+  function initStickyInfo(productEl) {
+    const info = $('[data-product-info]', productEl);
+    if (!info || info.dataset.stickyReady) return;
+    info.dataset.stickyReady = 'true';
+    const check = () => info.classList.toggle('is-tall', info.offsetHeight > window.innerHeight - 48);
+    if ('ResizeObserver' in window) new ResizeObserver(check).observe(info);
+    window.addEventListener('resize', check);
+    check();
+  }
+
   function initProducts(root = document) {
     $$('[data-product]', root).forEach((productEl) => {
+      initStickyInfo(productEl);
       const picker = $('[data-variant-picker]', productEl);
       if (!picker || picker.dataset.ready) return;
       picker.dataset.ready = 'true';
@@ -286,7 +298,10 @@
         });
       }
 
+      let requestId = 0;
+
       async function onChange() {
+        const thisRequest = ++requestId;
         const selected = selectedOptions();
         fieldsets.forEach((fs, i) => {
           const label = $('[data-selected-value]', fs);
@@ -302,6 +317,8 @@
         if (!variant) {
           if (addBtn) addBtn.disabled = true;
           if (addLabel) addLabel.textContent = theme.strings.unavailable;
+          const stock = $('[data-dynamic="stock"]', productEl);
+          if (stock) stock.innerHTML = '<span class="stock stock--out">' + theme.strings.unavailable + '</span>';
           return;
         }
 
@@ -312,15 +329,19 @@
         const url = productUrl + '?variant=' + variant.id;
         window.history.replaceState({}, '', url);
 
-        // Ár frissítése a szerverről (Section Rendering API) – így a pénznem formázását a Shopify végzi
+        // Ár, készlet, cikkszám frissítése a szerverről (Section Rendering API) –
+        // így a pénznem formázását és a készletszöveget a Shopify/Liquid adja.
+        // Minden [data-dynamic="kulcs"] elem tartalma a friss változatra cserélődik.
         try {
           const res = await fetch(url + '&section_id=' + sectionId);
           const html = await res.text();
+          if (thisRequest !== requestId) return; // közben újabb választás történt
           const doc = new DOMParser().parseFromString(html, 'text/html');
-          const newPrice = $('[data-price]', doc);
-          const oldPrice = $('[data-price]', productEl);
-          if (newPrice && oldPrice) oldPrice.innerHTML = newPrice.innerHTML;
-        } catch (err) { /* az ár marad */ }
+          $$('[data-dynamic]', productEl).forEach((el) => {
+            const fresh = $('[data-dynamic="' + el.dataset.dynamic + '"]', doc);
+            if (fresh) el.innerHTML = fresh.innerHTML;
+          });
+        } catch (err) { /* a régi értékek maradnak */ }
 
         // Ha a változatnak saját képe van, görgessünk oda
         if (variant.featured_media) {

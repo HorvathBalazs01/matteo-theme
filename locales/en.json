@@ -33,7 +33,32 @@
     "placeholder_title": "Product name",
     "recommendations": "You may also like",
     "as_set": "Complete the set",
-    "size_chart": "Size chart"
+    "size_chart": "Size chart",
+    "in_stock": "In stock",
+    "low_stock": "Only {{ count }} left in stock",
+    "category": "Category",
+    "type": "Type",
+    "vendor": "Brand",
+    "weight": "Weight",
+    "sku": "SKU",
+    "details": {
+      "fabric": "Fabric",
+      "material": "Material",
+      "color_pattern": "Color",
+      "size": "Size",
+      "target_gender": "Gender",
+      "age_group": "Age group",
+      "fit": "Fit",
+      "sleeve_length_type": "Sleeve length",
+      "neckline": "Neckline",
+      "top_length_type": "Length",
+      "pants_length_type": "Leg length",
+      "waist_rise": "Waist rise",
+      "closure_type": "Closure",
+      "clothing_features": "Features",
+      "activity": "Activity",
+      "care_instructions": "Care"
+    }
   },
   "cart": {
     "title": "Cart",
