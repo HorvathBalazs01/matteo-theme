@@ -58,7 +58,12 @@
       "clothing_features": "Features",
       "activity": "Activity",
       "care_instructions": "Care"
-    }
+    },
+    "gallery": "Product images",
+    "media_open": "Open image {{ index }} of {{ count }}",
+    "media_more": "View {{ count }} more images",
+    "media_previous": "Previous image",
+    "media_next": "Next image"
   },
   "cart": {
     "title": "Cart",

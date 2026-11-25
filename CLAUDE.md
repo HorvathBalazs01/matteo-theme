@@ -96,16 +96,23 @@ assets/theme.js            drawer-ek, prediktív keresés, hero csúszka, válto
   `trust-bar` (4 előny), `featured-collection` (Legnépszerűbb termékeink), `collection-tiles` (kategória csempék),
   `about` (Rólunk, `id="rolunk"`), `newsletter` (customer form, `newsletter` tag)
 - `main-collection`: fejléc sáv, gyorslinkek (menüből), szűrők (`collection.filters`), rendezés, lapozás
-- `main-product`: bal oldalt galéria, jobb oldalt blokkok (sorrend a `product.json`-ban): title, price,
-  variant_picker (rádiógombok; megjelenés: lista jelölőnégyzettel + soronkénti készlet / gombok; swatch; elfogyott áthúzva;
-  „Raktáron / Már csak X db / Elfogyott” sor; Mérettáblázat link), description (mindig látható vagy lenyíló),
-  buy_buttons (Kosárba + „Szettként” párosított termék), perks, details („Termék részletei”: a kategória-metamezők
-  `product.metafields.shopify[...]` – anyag, szín, nem, ujjhossz stb. –, kategória, cikkszám, + 4 saját sor
-  dinamikus forráshoz), collapsible (üresen nem jelenik meg), text, @app.
-  - Változatváltáskor a JS a Section Rendering API-val frissít minden `[data-dynamic="…"]` elemet (ár, készlet, cikkszám).
+- `main-product` – elrendezés:
+  - **Felül 60/40** (749 px alatt egymás alatt): balra **négyzetes képblokk** (`.gallery`, 1:1, skálázódik):
+    1. kép nagyban (2/3), jobbra fent a 2., jobbra lent a 3.; ha 3-nál több kép van, a 3. elmosva „+x” felirattal
+    (x = a további képek száma). Bármelyik képre kattintva **lightbox** nyílik az adott képtől (nyilak, ← → Esc,
+    ujjal húzás). A kiválasztott változat saját képe kerül előre. Jobbra a blokkok **a Kosárba gombig** (vele együtt).
+  - **Alul teljes szélességben** (`.product__more`): a Kosárba gomb **utáni** blokkok – a `product.json` sorrendje
+    dönti el, mi hova kerül (most: description, perks, details, care, shipping).
+  - Blokkok: title, price, variant_picker (alapból egy sorban gombok, elfogyott méret áthúzva; „lista” megjelenés is
+    választható; „Már csak X db” sor csak alacsony készletnél; Mérettáblázat link), buy_buttons (Kosárba +
+    „Szettként”), description (látható vagy lenyíló), perks, details (`snippets/product-details.liquid`: kategória-
+    metamezők `product.metafields.shopify[...]` – anyag, szín, nem, ujjhossz stb. –, kategória, cikkszám, + 4 saját
+    sor dinamikus forráshoz), collapsible (üresen nem jelenik meg), text, @app.
+  - Változatváltáskor a JS a Section Rendering API-val frissít minden `[data-dynamic="…"]` elemet (ár, készlet,
+    cikkszám, képblokk, lightbox), de csak ha a tartalom tényleg változott.
   - A méretválasztóhoz a terméknek **változatok** kellenek (Változatok → Méret). A kategória „Méret” mezője csak
     a részletek közé kerül, nem választható.
-  - A jobb oszlop sticky, de ha magasabb a képernyőnél, `.is-tall` → static (theme.js `initStickyInfo`).
+  - A szekció Liquid-komplexitása közel van a theme check 120-as határához: új logikát inkább snippetbe tegyél.
 - `product-recommendations` (Section Rendering API-val töltődik)
 - `main-cart` + `cart-drawer` (statikus szekció, `sections=cart-drawer` paraméterrel frissül)
 - `main-search`, `main-page`, `main-404`, `main-list-collections`, `main-password`

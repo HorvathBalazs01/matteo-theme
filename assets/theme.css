@@ -930,38 +930,147 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 
 .product { padding-top: 28px; padding-bottom: 96px; }
 .product .breadcrumbs { margin-bottom: 28px; }
-/* Két oszlop: 60% képek (bal), 40% minden más (jobb). Telefonon (749 px alatt) egymás alatt. */
+/* Felső rész: 60% képek (bal), 40% név/ár/méret/Kosárba (jobb). Telefonon (749 px alatt) egymás alatt. */
 .product__grid {
   display: grid;
   grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
   gap: 56px;
   align-items: start;
 }
+.product__gallery { min-width: 0; }
 
-.product__gallery {
-  min-width: 0;
+/* Négyzetes képblokk: 1. kép balra (2/3), 2. jobbra fent, 3. jobbra lent (1/3).
+   Fix 1:1 arány, a szélességgel együtt skálázódik. */
+.gallery {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  aspect-ratio: 1 / 1;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 8px;
 }
-.product__media { position: relative; aspect-ratio: 4 / 5; background: var(--color-placeholder); overflow: hidden; }
-.product__media--large { grid-column: span 2; aspect-ratio: 4 / 3; }
-.product__media img,
-.product__media .placeholder-svg { width: 100%; height: 100%; object-fit: cover; }
+.gallery--count-1 { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+.gallery__tile--main,
+.gallery--count-2 .gallery__tile:nth-child(2) { grid-row: 1 / span 2; }
+.gallery__tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  background: var(--color-placeholder);
+  cursor: zoom-in;
+}
+.gallery__tile img,
+.gallery__tile .placeholder-svg { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.gallery__tile:focus-visible { outline-offset: -3px; }
+@media (hover: hover) {
+  .gallery__tile:hover img { transform: scale(1.03); }
+}
+/* A 3. kép elmosva, „+x” felirattal, ha további képek is vannak */
+.gallery__tile--more { cursor: pointer; }
+.gallery__tile--more img { filter: blur(6px); transform: scale(1.12); }
+.gallery__tile--more::after { content: ""; position: absolute; inset: 0; background: rgba(10, 10, 10, .45); transition: background .3s ease; }
+@media (hover: hover) {
+  .gallery__tile--more:hover img { transform: scale(1.16); }
+  .gallery__tile--more:hover::after { background: rgba(10, 10, 10, .3); }
+}
+.gallery__more {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: clamp(20px, 2.4vw, 34px);
+  font-weight: 300;
+  letter-spacing: .1em;
+}
 
 .product__info {
   min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 28px;
-  position: sticky;
-  top: 24px;
 }
-/* Ha a jobb oszlop magasabb a képernyőnél, ne ragadjon (theme.js: initStickyInfo) */
-.product__info.is-tall { position: static; }
 
 .product__label { font-family: var(--font-display); font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; }
 .product__description .rte { font-size: 15px; }
+
+/* Alsó rész: a 60/40 alatt, teljes szélességben (leírás, részletek, lenyílók) */
+.product__more { margin-top: 80px; padding-top: 56px; border-top: 1px solid var(--color-line); }
+.product__more > * + * { margin-top: 56px; }
+.product__more > .accordion + .accordion { margin-top: 0; }
+.product__more .product__block { gap: 20px; }
+.product__more .product__label { display: flex; align-items: center; gap: 20px; font-size: 13px; font-weight: 500; letter-spacing: .24em; }
+.product__more .product__label::after { content: ""; width: 130px; height: 1px; background: var(--color-line-strong); }
+.product__more .product__description .rte { max-width: 960px; font-size: 16px; }
+.product__more .perks { flex-direction: row; flex-wrap: wrap; gap: 10px 40px; }
+.product__more .details { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); column-gap: 56px; }
+
+/* Nagyítós nézet (lightbox) – theme.js: „Termékképek nagyítása” */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  background: rgba(7, 7, 7, .97);
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .25s ease, visibility .25s;
+}
+.lightbox.is-open { visibility: visible; opacity: 1; }
+.lightbox__top { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px var(--gutter); }
+.lightbox__counter { font-family: var(--font-display); font-size: 12px; font-weight: 500; letter-spacing: .2em; color: var(--color-text-soft); }
+.lightbox__track {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+.lightbox__track::-webkit-scrollbar { display: none; }
+.lightbox__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0 88px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+.lightbox__slide img,
+.lightbox__slide video,
+.lightbox__slide iframe { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+.lightbox__slide iframe { width: 100%; aspect-ratio: 16 / 9; height: auto; }
+.lightbox__nav {
+  position: absolute;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  margin-top: -28px;
+  border: 1px solid var(--color-line-strong);
+  background: rgba(10, 10, 10, .6);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color .2s ease, opacity .2s ease;
+}
+.lightbox__nav:hover { border-color: var(--color-text); }
+.lightbox__nav:disabled { opacity: .25; cursor: default; }
+.lightbox__nav--prev { left: 16px; }
+.lightbox__nav--next { right: 16px; }
 .product__block { display: flex; flex-direction: column; gap: 12px; }
 .product__eyebrow { font-family: var(--font-display); font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: var(--color-muted); }
 .product__title { font-size: 28px; letter-spacing: .18em; }
@@ -1046,6 +1155,7 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 
 /* Készletjelzés a kiválasztott változathoz */
 .product__stock { font-size: 13px; color: var(--color-text-soft); }
+.product__stock:empty { display: none; }
 .stock { display: inline-flex; align-items: center; gap: 10px; }
 .stock::before { content: ""; width: 7px; height: 7px; background: var(--color-text); }
 .stock--low::before { background: transparent; border: 1px solid var(--color-text); }
@@ -1103,28 +1213,19 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
 @media (max-width: 989px) {
-  /* Tableten keskenyebb a bal oszlop: a képek egy oszlopban, egymás alatt */
   .product__grid { gap: 32px; }
-  .product__gallery { grid-template-columns: minmax(0, 1fr); }
-  .product__media--large { grid-column: auto; aspect-ratio: 4 / 5; }
+  .product__more { margin-top: 56px; padding-top: 40px; }
+  .product__more > * + * { margin-top: 40px; }
 }
 @media (max-width: 749px) {
-  .product__grid { grid-template-columns: minmax(0, 1fr); }
-  .product__info { position: static; }
   .product { padding-top: 16px; }
-  .product__gallery {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 8px;
-    margin: 0 calc(var(--gutter) * -1);
-    padding: 0 var(--gutter);
-    scrollbar-width: none;
-  }
-  .product__gallery::-webkit-scrollbar { display: none; }
-  .product__media,
-  .product__media--large { flex: 0 0 86%; aspect-ratio: 4 / 5; scroll-snap-align: center; }
+  .product__grid { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .gallery { gap: 6px; }
   .product__title { font-size: 22px; }
+  .product__more .details { grid-template-columns: minmax(0, 1fr); }
+  /* Telefonon a nagyítós nézetben ujjal lapozunk, a nyilak nem kellenek */
+  .lightbox__slide { padding: 0 0 24px; }
+  .lightbox__nav { display: none; }
 }
 
 /* --------------------------------------------------------------------------

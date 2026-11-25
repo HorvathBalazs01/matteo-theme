@@ -5,16 +5,16 @@
       "blocks": {
         "title": { "type": "title", "settings": {} },
         "price": { "type": "price", "settings": { "show_tax_note": false } },
-        "variants": { "type": "variant_picker", "settings": { "picker_style": "list", "show_stock": true, "low_stock": 3 } },
-        "description": { "type": "description", "settings": { "style": "plain", "heading": "Leírás", "open": true } },
+        "variants": { "type": "variant_picker", "settings": { "picker_style": "buttons", "show_stock": true, "low_stock": 3 } },
         "buy": { "type": "buy_buttons", "settings": {} },
+        "description": { "type": "description", "settings": { "style": "plain", "heading": "Leírás", "open": true } },
         "perks": { "type": "perks", "settings": { "lines": "Ingyenes szállítás 30.000 Ft felett\n14 napos visszaküldés, kockázat nélkül" } },
         "details": { "type": "details", "settings": { "heading": "Termék részletei", "show_category_metafields": true, "show_category": true, "show_sku": true, "show_type": false, "show_vendor": false, "show_weight": false } },
         "care": { "type": "collapsible", "settings": { "heading": "Ápolás", "content": "<p>Kifordítva, 30 °C-on, hasonló színekkel mosd. Ne tedd szárítógépbe, és ne vasald közvetlenül a mintát. A pontos útmutatót a termék címkéjén találod.</p>" } },
         "shipping": { "type": "collapsible", "settings": { "heading": "Szállítás és visszaküldés", "content": "<p>Ingyenes szállítás 30.000 Ft feletti rendelés esetén. 14 napon belül indoklás nélkül visszaküldheted a terméket.</p>", "show_policy_links": true } }
       },
-      "block_order": ["title", "price", "variants", "description", "buy", "perks", "details", "care", "shipping"],
-      "settings": { "large_first": true }
+      "block_order": ["title", "price", "variants", "buy", "description", "perks", "details", "care", "shipping"],
+      "settings": {}
     },
     "recommendations": {
       "type": "product-recommendations",

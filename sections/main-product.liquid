@@ -3,60 +3,39 @@
   assign form_id = 'product-form-' | append: section.id
   assign size_chart_shown = false
   assign option_names = product.options | join: ',' | downcase
+
+  comment
+    Blokkok elosztása: a Kosárba gombig (vele együtt) a képek melletti jobb oszlopba,
+    az utána következők a képek alá, teljes szélességben.
+  endcomment
+  assign split_after = section.blocks.size
+  for block in section.blocks
+    if block.type == 'buy_buttons'
+      assign split_after = forloop.index
+      break
+    endif
+  endfor
+
+  comment
+    Képek sorrendje: ha a kiválasztott változatnak saját képe van (pl. másik szín), az kerül előre.
+  endcomment
+  assign media_count = product.media.size
+  assign featured_media = current_variant.featured_media | default: product.featured_media
+  if featured_media != blank
+    assign featured_list = product.media | where: 'id', featured_media.id
+    assign other_media = product.media | reject: 'id', featured_media.id
+    assign ordered_media = featured_list | concat: other_media
+  else
+    assign ordered_media = product.media
+  endif
+  assign tile_count = media_count | at_most: 3 | at_least: 1
+  assign extra_count = media_count | minus: 3
 -%}
 
-<section class="product page-width" data-product data-section-id="{{ section.id }}" data-product-url="{{ product.url }}">
-  <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumb' | t }}">
-    <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
-    <span aria-hidden="true">/</span>
-    {%- if collection -%}
-      <a href="{{ collection.url }}">{{ collection.title }}</a>
-      <span aria-hidden="true">/</span>
-    {%- endif -%}
-    <span aria-current="page">{{ product.title }}</span>
-  </nav>
-
-  <div class="product__grid">
-    <div class="product__gallery" data-gallery>
-      {%- if product.media.size > 0 -%}
-        {%- for media in product.media -%}
-          {%- liquid
-            assign is_large = false
-            if forloop.first and section.settings.large_first
-              assign is_large = true
-            endif
-            assign loading = 'lazy'
-            if forloop.index <= 2
-              assign loading = 'eager'
-            endif
-            assign media_alt = media.alt | default: product.title | escape
-            comment
-              Bal oszlop = 60%: a nagy (első) kép ~55vw, a rács képei ~28vw; tableten 1 oszlop (~55vw), mobilon 86vw.
-            endcomment
-            assign media_sizes = '(min-width: 990px) 28vw, (min-width: 750px) 55vw, 86vw'
-            if is_large
-              assign media_sizes = '(min-width: 750px) 55vw, 86vw'
-            endif
-          -%}
-          <div class="product__media{% if is_large %} product__media--large{% endif %}" data-media-id="{{ media.id }}">
-            {%- if media.media_type == 'image' -%}
-              {{ media | image_url: width: 1800 | image_tag: loading: loading, widths: '500,750,1000,1400,1800', sizes: media_sizes, alt: media_alt }}
-            {%- elsif media.media_type == 'video' or media.media_type == 'external_video' -%}
-              {{ media | media_tag: image_size: '1400x', autoplay: true, loop: true, muted: true, controls: false }}
-            {%- else -%}
-              {{ media | media_tag }}
-            {%- endif -%}
-          </div>
-        {%- endfor -%}
-      {%- else -%}
-        <div class="product__media product__media--large">{{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
-        <div class="product__media">{{ 'product-apparel-2' | placeholder_svg_tag: 'placeholder-svg' }}</div>
-        <div class="product__media">{{ 'product-apparel-3' | placeholder_svg_tag: 'placeholder-svg' }}</div>
-      {%- endif -%}
-    </div>
-
-    <div class="product__info" data-product-info>
-      {%- for block in section.blocks -%}
+{%- assign upper_blocks = '' -%}
+{%- assign lower_blocks = '' -%}
+{%- for block in section.blocks -%}
+  {%- capture block_html -%}
         {%- case block.type -%}
           {%- when 'title' -%}
             <div class="product__block" {{ block.shopify_attributes }}>
@@ -162,20 +141,11 @@
                 {%- endif -%}
               {%- endunless -%}
 
+              {%- comment -%} Csak alacsony készletnél jelenik meg; az elfogyott méretet az áthúzás jelzi {%- endcomment -%}
               {%- if block.settings.show_stock -%}
-                {%- liquid
-                  assign stock_low = false
-                  if current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= block.settings.low_stock
-                    assign stock_low = true
-                  endif
-                -%}
                 <p class="product__stock" data-dynamic="stock">
-                  {%- if current_variant.available == false -%}
-                    <span class="stock stock--out">{{ 'products.sold_out' | t }}</span>
-                  {%- elsif stock_low -%}
+                  {%- if current_variant.available and current_variant.inventory_management == 'shopify' and current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= block.settings.low_stock -%}
                     <span class="stock stock--low">{{ 'products.low_stock' | t: count: current_variant.inventory_quantity }}</span>
-                  {%- else -%}
-                    <span class="stock stock--in">{{ 'products.in_stock' | t }}</span>
                   {%- endif -%}
                 </p>
               {%- endif -%}
@@ -250,93 +220,7 @@
             {%- endif -%}
 
           {%- when 'details' -%}
-            {%- comment -%}
-              Termék részletei: a termékkategória adatai (Anyag, Szín, Nem, Ujjhossz…, a Shopify
-              „shopify” névterű kategória-metamezői), cikkszám, kategória, típus, márka, súly,
-              és legfeljebb 4 saját sor (a szerkesztőben metamezőhöz köthető).
-            {%- endcomment -%}
-            {%- capture details_rows -%}
-              {%- if block.settings.show_category and product.category != blank -%}
-                <div class="details__row"><dt>{{ 'products.category' | t }}</dt><dd>{{ product.category.name }}</dd></div>
-              {%- endif -%}
-              {%- if block.settings.show_type and product.type != blank -%}
-                <div class="details__row"><dt>{{ 'products.type' | t }}</dt><dd>{{ product.type }}</dd></div>
-              {%- endif -%}
-              {%- if block.settings.show_vendor and product.vendor != blank -%}
-                <div class="details__row"><dt>{{ 'products.vendor' | t }}</dt><dd>{{ product.vendor }}</dd></div>
-              {%- endif -%}
-
-              {%- if block.settings.show_category_metafields -%}
-                {%- assign detail_keys = 'fabric,material,color-pattern,size,target-gender,age-group,fit,sleeve-length-type,neckline,top-length-type,pants-length-type,waist-rise,closure-type,clothing-features,activity,care-instructions' | split: ',' -%}
-                {%- for key in detail_keys -%}
-                  {%- liquid
-                    assign skip = false
-                    if key == 'size'
-                      if option_names contains 'méret' or option_names contains 'meret' or option_names contains 'size'
-                        assign skip = true
-                      endif
-                    elsif key == 'color-pattern'
-                      if option_names contains 'szín' or option_names contains 'szin' or option_names contains 'color' or option_names contains 'colour'
-                        assign skip = true
-                      endif
-                    endif
-                    assign mf = product.metafields.shopify[key]
-                  -%}
-                  {%- if skip == false and mf != blank -%}
-                    {%- assign label_key = 'products.details.' | append: key | replace: '-', '_' -%}
-                    <div class="details__row">
-                      <dt>{{ label_key | t }}</dt>
-                      <dd>
-                        {%- case mf.type -%}
-                          {%- when 'list.metaobject_reference' -%}
-                            {%- for item in mf.value -%}
-                              {{- item.label.value | default: item.label -}}
-                              {%- unless forloop.last %}, {% endunless -%}
-                            {%- endfor -%}
-                          {%- when 'metaobject_reference' -%}
-                            {{- mf.value.label.value | default: mf.value.label -}}
-                          {%- else -%}
-                            {{- mf | metafield_text -}}
-                        {%- endcase -%}
-                      </dd>
-                    </div>
-                  {%- endif -%}
-                {%- endfor -%}
-              {%- endif -%}
-
-              {%- for i in (1..4) -%}
-                {%- liquid
-                  assign custom_label_key = 'label_' | append: i
-                  assign custom_value_key = 'value_' | append: i
-                  assign custom_label = block.settings[custom_label_key]
-                  assign custom_value = block.settings[custom_value_key]
-                -%}
-                {%- if custom_label != blank and custom_value != blank -%}
-                  <div class="details__row"><dt>{{ custom_label }}</dt><dd>{{ custom_value }}</dd></div>
-                {%- endif -%}
-              {%- endfor -%}
-
-              {%- if block.settings.show_weight and current_variant.weight > 0 -%}
-                <div class="details__row"><dt>{{ 'products.weight' | t }}</dt><dd>{{ current_variant.weight | weight_with_unit: current_variant.weight_unit }}</dd></div>
-              {%- endif -%}
-
-              {%- if block.settings.show_sku -%}
-                {%- assign all_skus = product.variants | map: 'sku' | join: '' -%}
-                {%- if all_skus != blank -%}
-                  <div class="details__row" data-dynamic="sku">
-                    {%- if current_variant.sku != blank -%}<dt>{{ 'products.sku' | t }}</dt><dd>{{ current_variant.sku }}</dd>{%- endif -%}
-                  </div>
-                {%- endif -%}
-              {%- endif -%}
-            {%- endcapture -%}
-            {%- if details_rows != blank -%}
-              <div class="product__block product__details" {{ block.shopify_attributes }}>
-                {%- if block.settings.heading != blank -%}
-                  <h2 class="product__label">{{ block.settings.heading }}</h2>
-                {%- endif -%}
-                <dl class="details">{{ details_rows }}</dl>
-              </div>
-            {%- endif -%}
+            {% render 'product-details', block: block, product: product, current_variant: current_variant, option_names: option_names %}
 
           {%- when 'collapsible' -%}
             {%- capture collapsible_content -%}
@@ -370,9 +254,113 @@
           {%- when '@app' -%}
             {% render block %}
         {%- endcase -%}
-      {%- endfor -%}
+  {%- endcapture -%}
+  {%- if forloop.index <= split_after -%}
+    {%- assign upper_blocks = upper_blocks | append: block_html -%}
+  {%- else -%}
+    {%- assign lower_blocks = lower_blocks | append: block_html -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<section class="product page-width" data-product data-section-id="{{ section.id }}" data-product-url="{{ product.url }}">
+  <nav class="breadcrumbs" aria-label="{{ 'general.breadcrumb' | t }}">
+    <a href="{{ routes.root_url }}">{{ 'general.home' | t }}</a>
+    <span aria-hidden="true">/</span>
+    {%- if collection -%}
+      <a href="{{ collection.url }}">{{ collection.title }}</a>
+      <span aria-hidden="true">/</span>
+    {%- endif -%}
+    <span aria-current="page">{{ product.title }}</span>
+  </nav>
+
+  {%- comment -%} Felső rész: 60% képek (négyzet) | 40% név, ár, méretek, Kosárba {%- endcomment -%}
+  <div class="product__grid">
+    <div class="product__gallery">
+      {%- comment -%}
+        Négyzetes képblokk: 1. kép nagyban balra, 2. jobbra fent, 3. jobbra lent.
+        Ha 3-nál több kép van, a 3. elmosva, „+x” felirattal (x = a további képek száma).
+        Bármelyikre kattintva a nagyítós nézet nyílik, az adott képtől kezdve.
+      {%- endcomment -%}
+      <div class="gallery gallery--count-{{ tile_count }}" data-dynamic="gallery">
+        {%- if media_count > 0 -%}
+          {%- for media in ordered_media limit: 3 -%}
+            {%- liquid
+              assign media_alt = media.alt | default: product.title | escape
+              assign is_more = false
+              if forloop.index == 3 and extra_count > 0
+                assign is_more = true
+              endif
+              assign tile_sizes = '(min-width: 750px) 20vw, 33vw'
+              assign tile_loading = 'lazy'
+              if forloop.first
+                assign tile_sizes = '(min-width: 750px) 40vw, 67vw'
+                assign tile_loading = 'eager'
+              endif
+              if tile_count == 1
+                assign tile_sizes = '(min-width: 750px) 60vw, 100vw'
+              endif
+              if is_more
+                assign tile_label = 'products.media_more' | t: count: extra_count
+              else
+                assign tile_label = 'products.media_open' | t: index: forloop.index, count: media_count
+              endif
+            -%}
+            <button
+              type="button"
+              class="gallery__tile{% if forloop.first %} gallery__tile--main{% endif %}{% if is_more %} gallery__tile--more{% endif %}"
+              data-lightbox-open="{{ forloop.index0 }}"
+              aria-controls="lightbox-{{ section.id }}"
+              aria-label="{{ tile_label | escape }}"
+            >
+              {{ media.preview_image | image_url: width: 1600 | image_tag: loading: tile_loading, widths: '400,600,800,1000,1200,1600', sizes: tile_sizes, alt: media_alt }}
+              {%- if is_more -%}
+                <span class="gallery__more" aria-hidden="true">+{{ extra_count }}</span>
+              {%- endif -%}
+            </button>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="gallery__tile gallery__tile--main">{{ 'product-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div class="product__info">
+      {{ upper_blocks }}
     </div>
   </div>
+
+  {%- comment -%} Alsó rész: a 60/40 alatt, teljes szélességben – leírás, részletek, lenyílók {%- endcomment -%}
+  {%- if lower_blocks != blank -%}
+    <div class="product__more">
+      {{ lower_blocks }}
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} Nagyítós nézet (lightbox): az összes kép, lapozható (nyilak, billentyűk, ujjal húzás) {%- endcomment -%}
+  {%- if media_count > 0 -%}
+    <div class="lightbox" id="lightbox-{{ section.id }}" data-lightbox role="dialog" aria-modal="true" aria-label="{{ 'products.gallery' | t }}" aria-hidden="true">
+      <div class="lightbox__top">
+        <span class="lightbox__counter" data-lightbox-counter aria-live="polite">1 / {{ media_count }}</span>
+        <button type="button" class="icon-btn" data-lightbox-close aria-label="{{ 'general.close' | t }}">{% render 'icon', icon: 'close' %}</button>
+      </div>
+      <div class="lightbox__track" data-lightbox-track data-dynamic="lightbox">
+        {%- for media in ordered_media -%}
+          {%- assign media_alt = media.alt | default: product.title | escape -%}
+          <figure class="lightbox__slide">
+            {%- if media.media_type == 'image' -%}
+              {{ media | image_url: width: 2400 | image_tag: loading: 'lazy', widths: '800,1200,1600,2000,2400', sizes: '100vw', alt: media_alt }}
+            {%- else -%}
+              {{ media | media_tag: image_size: '1600x', controls: true }}
+            {%- endif -%}
+          </figure>
+        {%- endfor -%}
+      </div>
+      {%- if media_count > 1 -%}
+        <button type="button" class="lightbox__nav lightbox__nav--prev" data-lightbox-prev aria-label="{{ 'products.media_previous' | t }}">{% render 'icon', icon: 'chevron-left' %}</button>
+        <button type="button" class="lightbox__nav lightbox__nav--next" data-lightbox-next aria-label="{{ 'products.media_next' | t }}">{% render 'icon', icon: 'chevron-right' %}</button>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
 </section>
 
 {%- comment -%}
@@ -401,7 +389,7 @@
   "name": "Termék",
   "class": "section-main-product",
   "settings": [
-    { "type": "checkbox", "id": "large_first", "label": "Első kép nagyban", "default": true }
+    { "type": "paragraph", "content": "Felül 60/40: balra a képek négyzetben, jobbra a blokkok a „Kosárba gomb”-ig (vele együtt). Az utána következő blokkok a képek alatt, teljes szélességben jelennek meg. A sorrend húzással állítható." }
   ],
   "blocks": [
     { "type": "@app" },
@@ -432,13 +420,13 @@
           "id": "picker_style",
           "label": "Megjelenés",
           "options": [
-            { "value": "list", "label": "Lista jelölőnégyzettel és készlettel" },
-            { "value": "buttons", "label": "Gombok egy sorban" }
+            { "value": "buttons", "label": "Gombok egy sorban" },
+            { "value": "list", "label": "Lista jelölőnégyzettel és készlettel" }
           ],
-          "default": "list",
-          "info": "A színmintás (swatch) opciók mindig kis színnégyzetként jelennek meg."
+          "default": "buttons",
+          "info": "Az elfogyott méret áthúzva jelenik meg. A színmintás (swatch) opciók mindig kis színnégyzetként jelennek meg."
         },
-        { "type": "checkbox", "id": "show_stock", "label": "Készletinformáció (Raktáron / Elfogyott)", "default": true },
+        { "type": "checkbox", "id": "show_stock", "label": "Alacsony készlet jelzése („Már csak X db”)", "default": true },
         { "type": "range", "id": "low_stock", "label": "„Már csak X db” jelzés ennyi darab alatt", "min": 0, "max": 10, "step": 1, "default": 3, "info": "0 = kikapcsolva. Csak készletkövetéses termékeknél." },
         { "type": "page", "id": "size_chart_page", "label": "Mérettáblázat oldal", "info": "Ha üres, a „merettablazat” címkéjű (handle) oldal. A link a „Méret” / „Size” nevű opció mellett jelenik meg." },
         { "type": "text", "id": "size_chart_label", "label": "Mérettáblázat link szövege", "info": "Üresen hagyva a nyelvnek megfelelő alapszöveg jelenik meg (Mérettáblázat / Size chart)." }

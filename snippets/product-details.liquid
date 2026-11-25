@@ -1,0 +1,94 @@
+{%- comment -%}
+  Termék részletei (termékoldal „details” blokk).
+  A termékkategória adatai (Anyag, Szín, Nem, Ujjhossz…, a Shopify „shopify” névterű kategória-metamezői),
+  kategória, típus, márka, legfeljebb 4 saját sor (a szerkesztőben metamezőhöz köthető), súly, cikkszám.
+  Csak a kitöltött sorok jelennek meg.
+
+  Paraméterek:
+  - block: a details blokk
+  - product, current_variant
+  - option_names: a termék opcióinak nevei kisbetűvel, vesszővel elválasztva (a Méret/Szín sor ne duplázódjon)
+{%- endcomment -%}
+{%- capture details_rows -%}
+  {%- if block.settings.show_category and product.category != blank -%}
+    <div class="details__row"><dt>{{ 'products.category' | t }}</dt><dd>{{ product.category.name }}</dd></div>
+  {%- endif -%}
+  {%- if block.settings.show_type and product.type != blank -%}
+    <div class="details__row"><dt>{{ 'products.type' | t }}</dt><dd>{{ product.type }}</dd></div>
+  {%- endif -%}
+  {%- if block.settings.show_vendor and product.vendor != blank -%}
+    <div class="details__row"><dt>{{ 'products.vendor' | t }}</dt><dd>{{ product.vendor }}</dd></div>
+  {%- endif -%}
+
+  {%- if block.settings.show_category_metafields -%}
+    {%- assign detail_keys = 'fabric,material,color-pattern,size,target-gender,age-group,fit,sleeve-length-type,neckline,top-length-type,pants-length-type,waist-rise,closure-type,clothing-features,activity,care-instructions' | split: ',' -%}
+    {%- for key in detail_keys -%}
+      {%- liquid
+        assign skip = false
+        if key == 'size'
+          if option_names contains 'méret' or option_names contains 'meret' or option_names contains 'size'
+            assign skip = true
+          endif
+        elsif key == 'color-pattern'
+          if option_names contains 'szín' or option_names contains 'szin' or option_names contains 'color' or option_names contains 'colour'
+            assign skip = true
+          endif
+        endif
+        assign mf = product.metafields.shopify[key]
+      -%}
+      {%- if skip == false and mf != blank -%}
+        {%- assign label_key = 'products.details.' | append: key | replace: '-', '_' -%}
+        <div class="details__row">
+          <dt>{{ label_key | t }}</dt>
+          <dd>
+            {%- case mf.type -%}
+              {%- when 'list.metaobject_reference' -%}
+                {%- for item in mf.value -%}
+                  {{- item.label.value | default: item.label -}}
+                  {%- unless forloop.last %}, {% endunless -%}
+                {%- endfor -%}
+              {%- when 'metaobject_reference' -%}
+                {{- mf.value.label.value | default: mf.value.label -}}
+              {%- else -%}
+                {{- mf | metafield_text -}}
+            {%- endcase -%}
+          </dd>
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+
+  {%- for i in (1..4) -%}
+    {%- liquid
+      assign custom_label_key = 'label_' | append: i
+      assign custom_value_key = 'value_' | append: i
+      assign custom_label = block.settings[custom_label_key]
+      assign custom_value = block.settings[custom_value_key]
+    -%}
+    {%- if custom_label != blank and custom_value != blank -%}
+      <div class="details__row"><dt>{{ custom_label }}</dt><dd>{{ custom_value }}</dd></div>
+    {%- endif -%}
+  {%- endfor -%}
+
+  {%- if block.settings.show_weight and current_variant.weight > 0 -%}
+    <div class="details__row"><dt>{{ 'products.weight' | t }}</dt><dd>{{ current_variant.weight | weight_with_unit: current_variant.weight_unit }}</dd></div>
+  {%- endif -%}
+
+  {%- if block.settings.show_sku -%}
+    {%- assign all_skus = product.variants | map: 'sku' | join: '' -%}
+    {%- if all_skus != blank -%}
+      <div class="details__row" data-dynamic="sku">
+        {%- if current_variant.sku != blank -%}<dt>{{ 'products.sku' | t }}</dt><dd>{{ current_variant.sku }}</dd>{%- endif -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- if details_rows != blank -%}
+  <div class="product__block product__details" {{ block.shopify_attributes }}>
+    {%- if block.settings.heading != blank -%}
+      <h2 class="product__label">{{ block.settings.heading }}</h2>
+    {%- endif -%}
+    <dl class="details">{{ details_rows }}</dl>
+  </div>
+{%- endif -%}

@@ -58,7 +58,12 @@
       "clothing_features": "Jellemzők",
       "activity": "Sportág",
       "care_instructions": "Ápolás"
-    }
+    },
+    "gallery": "Termékképek",
+    "media_open": "Kép nagyítása ({{ index }} / {{ count }})",
+    "media_more": "További {{ count }} kép megtekintése",
+    "media_previous": "Előző kép",
+    "media_next": "Következő kép"
   },
   "cart": {
     "title": "Kosár",

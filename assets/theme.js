@@ -254,20 +254,8 @@
      Termékoldal – változatválasztó
      ------------------------------------------------------------------------ */
 
-  // A jobb oszlop csak akkor „ragad” görgetéskor, ha kifér a képernyőre (különben az alja elérhetetlen lenne)
-  function initStickyInfo(productEl) {
-    const info = $('[data-product-info]', productEl);
-    if (!info || info.dataset.stickyReady) return;
-    info.dataset.stickyReady = 'true';
-    const check = () => info.classList.toggle('is-tall', info.offsetHeight > window.innerHeight - 48);
-    if ('ResizeObserver' in window) new ResizeObserver(check).observe(info);
-    window.addEventListener('resize', check);
-    check();
-  }
-
   function initProducts(root = document) {
     $$('[data-product]', root).forEach((productEl) => {
-      initStickyInfo(productEl);
       const picker = $('[data-variant-picker]', productEl);
       if (!picker || picker.dataset.ready) return;
       picker.dataset.ready = 'true';
@@ -318,7 +306,7 @@
           if (addBtn) addBtn.disabled = true;
           if (addLabel) addLabel.textContent = theme.strings.unavailable;
           const stock = $('[data-dynamic="stock"]', productEl);
-          if (stock) stock.innerHTML = '<span class="stock stock--out">' + theme.strings.unavailable + '</span>';
+          if (stock) stock.innerHTML = '';
           return;
         }
 
@@ -329,9 +317,10 @@
         const url = productUrl + '?variant=' + variant.id;
         window.history.replaceState({}, '', url);
 
-        // Ár, készlet, cikkszám frissítése a szerverről (Section Rendering API) –
-        // így a pénznem formázását és a készletszöveget a Shopify/Liquid adja.
-        // Minden [data-dynamic="kulcs"] elem tartalma a friss változatra cserélődik.
+        // Ár, készlet, cikkszám, képek frissítése a szerverről (Section Rendering API) –
+        // így a pénznem formázását és a szövegeket a Shopify/Liquid adja.
+        // Minden [data-dynamic="kulcs"] elem tartalma a friss változatra cserélődik, de csak ha
+        // tényleg változott (méretváltáskor a képek ugyanazok maradnak, így nem villognak).
         try {
           const res = await fetch(url + '&section_id=' + sectionId);
           const html = await res.text();
@@ -339,20 +328,9 @@
           const doc = new DOMParser().parseFromString(html, 'text/html');
           $$('[data-dynamic]', productEl).forEach((el) => {
             const fresh = $('[data-dynamic="' + el.dataset.dynamic + '"]', doc);
-            if (fresh) el.innerHTML = fresh.innerHTML;
+            if (fresh && fresh.innerHTML !== el.innerHTML) el.innerHTML = fresh.innerHTML;
           });
         } catch (err) { /* a régi értékek maradnak */ }
-
-        // Ha a változatnak saját képe van, görgessünk oda
-        if (variant.featured_media) {
-          const media = $('[data-media-id="' + variant.featured_media.id + '"]', productEl);
-          const gallery = $('[data-gallery]', productEl);
-          if (media && gallery) {
-            if (window.matchMedia('(max-width: 749px)').matches) {
-              gallery.scrollTo({ left: media.offsetLeft - gallery.offsetLeft, behavior: 'smooth' });
-            }
-          }
-        }
       }
 
       picker.addEventListener('change', (e) => {
@@ -364,6 +342,101 @@
   }
 
   initProducts();
+
+  /* ------------------------------------------------------------------------
+     Termékképek nagyítása (lightbox)
+     A négyzetes képblokk bármelyik képére kattintva megnyílik az adott képtől.
+     Lapozás: nyilak, billentyűzet (← → Esc), ujjal húzás (görgethető sáv).
+     ------------------------------------------------------------------------ */
+
+  let lightboxReturnFocus = null;
+
+  function lightboxSlides(box) {
+    return $$('.lightbox__slide', box);
+  }
+
+  function lightboxUpdate(box, index) {
+    const total = lightboxSlides(box).length;
+    box.dataset.index = index;
+    const counter = $('[data-lightbox-counter]', box);
+    if (counter) counter.textContent = (index + 1) + ' / ' + total;
+    const prev = $('[data-lightbox-prev]', box);
+    const next = $('[data-lightbox-next]', box);
+    if (prev) prev.disabled = index <= 0;
+    if (next) next.disabled = index >= total - 1;
+  }
+
+  function lightboxGo(box, index, smooth) {
+    const track = $('[data-lightbox-track]', box);
+    const total = lightboxSlides(box).length;
+    if (!track || !total) return;
+    const i = Math.max(0, Math.min(index, total - 1));
+    track.scrollTo({ left: i * track.clientWidth, behavior: smooth ? 'smooth' : 'auto' });
+    lightboxUpdate(box, i);
+  }
+
+  function openLightbox(box, index) {
+    lightboxReturnFocus = document.activeElement;
+    box.classList.add('is-open');
+    box.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('is-locked');
+    lightboxGo(box, index, false);
+    const close = $('[data-lightbox-close]', box);
+    if (close) setTimeout(() => close.focus(), 50);
+  }
+
+  function closeLightbox(box) {
+    box.classList.remove('is-open');
+    box.setAttribute('aria-hidden', 'true');
+    if (!$('.drawer.is-open')) document.body.classList.remove('is-locked');
+    if (lightboxReturnFocus) lightboxReturnFocus.focus();
+  }
+
+  document.addEventListener('click', (e) => {
+    const opener = e.target.closest('[data-lightbox-open]');
+    if (opener) {
+      const productEl = opener.closest('[data-product]');
+      const box = productEl && $('[data-lightbox]', productEl);
+      if (box) {
+        e.preventDefault();
+        openLightbox(box, Number(opener.dataset.lightboxOpen) || 0);
+      }
+      return;
+    }
+
+    const box = e.target.closest('[data-lightbox]');
+    if (!box) return;
+    const current = Number(box.dataset.index) || 0;
+    if (e.target.closest('[data-lightbox-close]')) closeLightbox(box);
+    else if (e.target.closest('[data-lightbox-prev]')) lightboxGo(box, current - 1, true);
+    else if (e.target.closest('[data-lightbox-next]')) lightboxGo(box, current + 1, true);
+    else if (e.target.classList.contains('lightbox__slide')) closeLightbox(box); // kattintás a kép melletti üres részre
+  });
+
+  document.addEventListener('keydown', (e) => {
+    const box = $('[data-lightbox].is-open');
+    if (!box) return;
+    const current = Number(box.dataset.index) || 0;
+    if (e.key === 'Escape') closeLightbox(box);
+    else if (e.key === 'ArrowLeft') lightboxGo(box, current - 1, true);
+    else if (e.key === 'ArrowRight') lightboxGo(box, current + 1, true);
+  });
+
+  // Ujjal lapozáskor (görgetés) a számláló és a nyilak kövessék az aktuális képet
+  document.addEventListener('scroll', (e) => {
+    const track = e.target;
+    if (!(track instanceof Element) || !track.matches('[data-lightbox-track]')) return;
+    const box = track.closest('[data-lightbox]');
+    if (!box || !track.clientWidth) return;
+    const index = Math.round(track.scrollLeft / track.clientWidth);
+    if (index !== Number(box.dataset.index)) lightboxUpdate(box, index);
+  }, true);
+
+  // Átméretezéskor maradjunk ugyanazon a képen
+  window.addEventListener('resize', () => {
+    const box = $('[data-lightbox].is-open');
+    if (box) lightboxGo(box, Number(box.dataset.index) || 0, false);
+  });
 
   /* ------------------------------------------------------------------------
      Kosár – Ajax API
