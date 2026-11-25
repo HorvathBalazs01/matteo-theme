@@ -930,10 +930,15 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 
 .product { padding-top: 28px; padding-bottom: 96px; }
 .product .breadcrumbs { margin-bottom: 28px; }
-.product__grid { display: flex; flex-wrap: wrap; gap: 64px; align-items: flex-start; }
+/* Két oszlop: 60% képek (bal), 40% minden más (jobb). Telefonon (749 px alatt) egymás alatt. */
+.product__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 56px;
+  align-items: start;
+}
 
 .product__gallery {
-  flex: 999 1 560px;
   min-width: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -945,7 +950,6 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .product__media .placeholder-svg { width: 100%; height: 100%; object-fit: cover; }
 
 .product__info {
-  flex: 1 1 420px;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -1099,10 +1103,14 @@ select.field option { background: var(--color-bg); color: var(--color-text); }
 .qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
 @media (max-width: 989px) {
+  /* Tableten keskenyebb a bal oszlop: a képek egy oszlopban, egymás alatt */
   .product__grid { gap: 32px; }
-  .product__info { position: static; }
+  .product__gallery { grid-template-columns: minmax(0, 1fr); }
+  .product__media--large { grid-column: auto; aspect-ratio: 4 / 5; }
 }
 @media (max-width: 749px) {
+  .product__grid { grid-template-columns: minmax(0, 1fr); }
+  .product__info { position: static; }
   .product { padding-top: 16px; }
   .product__gallery {
     display: flex;
